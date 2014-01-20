@@ -35,8 +35,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.joda.time.DateTime;
-
 
 /**
  * Performance Benchmark: MutableDateTime vs Joda ImmutableDateTimeScrap vs Java Date
@@ -64,7 +62,7 @@ public class Perf4DateTime {
 	protected ArrayList<Double> hiloFactor;
 
     protected ColumnHelper      column4TestName;
-    protected ColumnHelper column4BizGuild;
+    protected ColumnHelper      column4BitzGuild;
     protected ColumnHelper      column4JavaDate;
     protected ColumnHelper      column4JodaDate;
     protected ColumnHelper      column4Factor;
@@ -81,7 +79,7 @@ public class Perf4DateTime {
 		timeJava = new ArrayList<Long>();
 		hiloFactor = new ArrayList<Double>();
 
-        column4BizGuild = new ColumnHelper("BitzGuild", 12);
+        column4BitzGuild = new ColumnHelper("BitzGuild", 12);
         column4JodaDate = new ColumnHelper("Joda", 12);
         column4JavaDate = new ColumnHelper("Java", 12);
         column4Factor = new ColumnHelper("Factor",14);
@@ -113,7 +111,7 @@ public class Perf4DateTime {
         StringBuffer strb = new StringBuffer();
 
         column4TestName.renderLabel(strb);
-        column4BizGuild.renderLabel(strb);
+        column4BitzGuild.renderLabel(strb);
         column4JodaDate.renderLabel(strb);
         column4JavaDate.renderLabel(strb);
         column4Factor.renderLabel(strb);
@@ -124,7 +122,7 @@ public class Perf4DateTime {
             strb.setLength(0);
 
             column4TestName.renderString(strb, testName.get(i));
-            column4BizGuild.renderLong(strb, timeBizGuild.get(i));
+            column4BitzGuild.renderLong(strb, timeBizGuild.get(i));
             column4JodaDate.renderLong(strb, timeJoda.get(i));
             column4JavaDate.renderLong(strb, timeJava.get(i));
             column4Factor.renderDouble(strb, hiloFactor.get(i));
@@ -156,7 +154,7 @@ public class Perf4DateTime {
         MutableDateTime bzgDT = MutableDateTime.yearMonthDay(2000, 1, 1);
         bzgDT.setHoursMinutesSecondsMillis(9, 4, 56, 123);
 
-        DateTime jodaDT = DateTime.parse("2000-01-01T09:04:56.123"); // LocalDateTime.parse("2013-03-30T09:04:56.123");
+        org.joda.time.DateTime jodaDT = org.joda.time.DateTime.parse("2000-01-01T09:04:56.123"); // LocalDateTime.parse("2013-03-30T09:04:56.123");
 
         Calendar myCal = Calendar.getInstance();
         myCal.set(Calendar.YEAR, 2000);
@@ -210,7 +208,7 @@ public class Perf4DateTime {
         MutableDateTime bzgDT = MutableDateTime.yearMonthDay(2000, 1, 1);
         bzgDT.setHoursMinutesSecondsMillis(9, 4, 56, 123);
 
-        DateTime jodaDT = DateTime.parse("2000-01-01T09:04:56.123"); // LocalDateTime.parse("2013-03-30T09:04:56.123");
+        org.joda.time.DateTime jodaDT = org.joda.time.DateTime.parse("2000-01-01T09:04:56.123"); // LocalDateTime.parse("2013-03-30T09:04:56.123");
 
         Calendar myCal = Calendar.getInstance();
         myCal.set(Calendar.YEAR, 2000);
@@ -239,7 +237,7 @@ public class Perf4DateTime {
         nsA = System.nanoTime();
         for(int i=0; i<iterations; i++) {
             @SuppressWarnings("unused")
-            DateTime jdt = DateTime.parse(str);
+            org.joda.time.DateTime jdt = org.joda.time.DateTime.parse(str);
         }
         nsZ = System.nanoTime();
         long nsIterJoda = nsZ - nsA;
@@ -276,7 +274,7 @@ public class Perf4DateTime {
         MutableDateTime bzgDT = MutableDateTime.yearMonthDay(2000, 1, 1);
         bzgDT.setHoursMinutesSecondsMillis(9, 4, 56, 123);
 
-        DateTime jodaDT = DateTime.parse("2000-01-01T09:04:56.123"); // LocalDateTime.parse("2013-03-30T09:04:56.123");
+        org.joda.time.DateTime jodaDT = org.joda.time.DateTime.parse("2000-01-01T09:04:56.123"); // LocalDateTime.parse("2013-03-30T09:04:56.123");
 
         Calendar myCal = Calendar.getInstance();
         myCal.set(Calendar.YEAR, 2000);
@@ -303,7 +301,7 @@ public class Perf4DateTime {
         for(int i=0; i<iterations; i++) {
             String str = jodaDT.toString();
             @SuppressWarnings("unused")
-            DateTime jdt = DateTime.parse(str);
+            org.joda.time.DateTime jdt = org.joda.time.DateTime.parse(str);
         }
         nsZ = System.nanoTime();
         long nsIterJoda = nsZ - nsA;
@@ -340,8 +338,8 @@ public class Perf4DateTime {
         MutableDateTime bzgDT1 = MutableDateTime.yearMonthDay(2000, 1, 1);
         MutableDateTime bzgDT2 = MutableDateTime.yearMonthDay(2000, 1, 2);
 
-        DateTime jodaDT1 = DateTime.parse("2000-01-01");
-        DateTime jodaDT2 = DateTime.parse("2000-01-02");
+        org.joda.time.DateTime jodaDT1 = org.joda.time.DateTime.parse("2000-01-01");
+        org.joda.time.DateTime jodaDT2 = org.joda.time.DateTime.parse("2000-01-02");
 
         Calendar myCal = Calendar.getInstance();
         myCal.set(Calendar.YEAR, 2000);
@@ -392,7 +390,7 @@ public class Perf4DateTime {
 		int iterations = 1000000;
 		
 		MutableDateTime pscDT = MutableDateTime.yearMonthDay(2000, 1, 1);
-		DateTime jodaDT = DateTime.parse("2000-01-01"); // LocalDateTime.parse("2013-03-30T09:04:56.123");
+		org.joda.time.DateTime jodaDT = org.joda.time.DateTime.parse("2000-01-01"); // LocalDateTime.parse("2013-03-30T09:04:56.123");
 
 		Calendar myCal = Calendar.getInstance();
 		myCal.set(Calendar.YEAR, 2000);
@@ -418,7 +416,7 @@ public class Perf4DateTime {
 		for(int i=0; i<iterations; i++) {
 			long t = jodaDT.getMillis();
             @SuppressWarnings("unused")
-			DateTime jdt = new DateTime(t);
+            org.joda.time.DateTime jdt = new org.joda.time.DateTime(t);
 		}
 		nsZ = System.nanoTime();
 		long nsIterJoda = nsZ - nsA;
@@ -460,7 +458,7 @@ public class Perf4DateTime {
 		nsA = System.nanoTime();
 		for(int i=0; i<iterations; i++) {
             @SuppressWarnings("unused")
-			DateTime jdt = new DateTime(2000,1,1,0,0,0,0);
+            org.joda.time.DateTime jdt = new org.joda.time.DateTime(2000,1,1,0,0,0,0);
 		}
 		nsZ = System.nanoTime();
 		long nsIterJoda = nsZ - nsA;
@@ -496,7 +494,7 @@ public class Perf4DateTime {
         int iterations = 1000000;
 
         MutableDateTime pscDT = MutableDateTime.yearMonthDay(2000, 1, 1);
-        DateTime jodaDT = DateTime.parse("2000-01-01"); // LocalDateTime.parse("2013-03-30T09:04:56.123");
+        org.joda.time.DateTime jodaDT = org.joda.time.DateTime.parse("2000-01-01"); // LocalDateTime.parse("2013-03-30T09:04:56.123");
 
         Calendar myCal = Calendar.getInstance();
         myCal.set(Calendar.YEAR, 2000);
@@ -519,7 +517,7 @@ public class Perf4DateTime {
 
 
         nsA = System.nanoTime();
-        DateTime tmpDateTime = jodaDT;
+        org.joda.time.DateTime tmpDateTime = jodaDT;
         for(int i=0; i<iterations; i++) {
             tmpDateTime = tmpDateTime.plusMinutes(1);
         }
@@ -552,7 +550,7 @@ public class Perf4DateTime {
         int iterations = 1000000;
 
         MutableDateTime pscDT = MutableDateTime.yearMonthDay(2000, 1, 1);
-        DateTime jodaDT = new DateTime(2000,1,1,0,0,0,0);
+        org.joda.time.DateTime jodaDT = new org.joda.time.DateTime(2000,1,1,0,0,0,0);
 
         Calendar myCal = Calendar.getInstance();
         myCal.set(Calendar.YEAR, 2000);
@@ -576,7 +574,7 @@ public class Perf4DateTime {
 
 
         nsA = System.nanoTime();
-        DateTime tmpDateTime = jodaDT;
+        org.joda.time.DateTime tmpDateTime = jodaDT;
         for(int i=0; i<iterations; i++) {
             tmpDateTime = tmpDateTime.plusDays(1);
         }
@@ -610,7 +608,7 @@ public class Perf4DateTime {
         int iterations = 1000000;
 
         MutableDateTime pscDT = MutableDateTime.yearMonthDay(2000, 1, 1);
-        DateTime jodaDT = new DateTime(2000,1,1,0,0,0,0);
+        org.joda.time.DateTime jodaDT = new org.joda.time.DateTime(2000,1,1,0,0,0,0);
 
         Calendar myCal = Calendar.getInstance();
         myCal.set(Calendar.YEAR, 2000);
@@ -625,7 +623,7 @@ public class Perf4DateTime {
 
         nsA = System.nanoTime();
         @SuppressWarnings("unused")
-        IDateTime tmpLDateTime;
+        DateTime tmpLDateTime;
         for(int i=0; i<iterations; i++) {
             tmpLDateTime = pscDT.addYears(1);
         }
@@ -634,7 +632,7 @@ public class Perf4DateTime {
 
 
         nsA = System.nanoTime();
-        DateTime tmpDateTime = jodaDT;
+        org.joda.time.DateTime tmpDateTime = jodaDT;
         for(int i=0; i<iterations; i++) {
             tmpDateTime = tmpDateTime.plusYears(1);
         }
@@ -670,7 +668,7 @@ public class Perf4DateTime {
 
         MutableDateTime pscDT = MutableDateTime.yearMonthDay(2000, 1, 1);
 
-        DateTime jodaDT = DateTime.parse("2000-01-01");
+        org.joda.time.DateTime jodaDT = org.joda.time.DateTime.parse("2000-01-01");
         // LocalDateTime dt1 = LocalDateTime.parse("2013-03-30T09:04:56.123");
 
         Calendar myCal = Calendar.getInstance();
@@ -695,7 +693,7 @@ public class Perf4DateTime {
 
 
         nsA = System.nanoTime();
-        DateTime tmpDateTime = jodaDT;
+        org.joda.time.DateTime tmpDateTime = jodaDT;
         for(int i=0; i<iterations; i++) {
             tmpDateTime = tmpDateTime.plusDays(1);
             int dow = tmpDateTime.getDayOfWeek();
@@ -736,7 +734,7 @@ public class Perf4DateTime {
         int iterations = 1000000;
 
         MutableDateTime bzgDT = MutableDateTime.yearMonthDay(2000, 1, 1);
-        DateTime jodaDT = new DateTime(2000,1,1,0,0,0,0);
+        org.joda.time.DateTime jodaDT = new org.joda.time.DateTime(2000,1,1,0,0,0,0);
 
         Calendar myCal = Calendar.getInstance();
         myCal.set(Calendar.YEAR, 2000);
@@ -751,7 +749,7 @@ public class Perf4DateTime {
 
         nsA = System.nanoTime();
         @SuppressWarnings("unused")
-        IDateTime tmpLDateTime;
+        DateTime tmpLDateTime;
         for(int i=0; i<iterations; i++) {
             int year = bzgDT.year();
             int month = bzgDT.month();
@@ -762,11 +760,11 @@ public class Perf4DateTime {
 
 
         nsA = System.nanoTime();
-        DateTime tmpDateTime = jodaDT;
+        org.joda.time.DateTime tmpDateTime = jodaDT;
         for(int i=0; i<iterations; i++) {
-            DateTime.Property yp = jodaDT.year();
-            DateTime.Property mp = jodaDT.monthOfYear();
-            DateTime.Property dp = jodaDT.dayOfMonth();
+            org.joda.time.DateTime.Property yp = jodaDT.year();
+            org.joda.time.DateTime.Property mp = jodaDT.monthOfYear();
+            org.joda.time.DateTime.Property dp = jodaDT.dayOfMonth();
             int year = yp.get();
             int month = mp.get();
             int day = dp.get();

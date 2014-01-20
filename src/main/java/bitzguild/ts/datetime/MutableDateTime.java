@@ -73,7 +73,7 @@ import java.util.Calendar;
  * @see bitzguild.ts.datetime.AbstractDateTime
  * @see bitzguild.ts.datetime.MutableDateTime
  * @see bitzguild.ts.datetime.ImmutableDateTime
- * @see IDateTimePredicate
+ * @see DateTimePredicate
  *
  * @author Kevin Sven Berg
  */
@@ -104,7 +104,7 @@ public class MutableDateTime extends AbstractDateTime implements java.io.Seriali
 	 * serial representation is a compact integer form that is strictly
 	 * increasing, like the Date object it represents, so that comparing
 	 * any two representations yields the same result as comparing two 
-	 * IDateTime objects.
+	 * DateTime objects.
 	 *
 	 * @param serial compact date representation
 	 */
@@ -168,7 +168,7 @@ public class MutableDateTime extends AbstractDateTime implements java.io.Seriali
 	 * 
 	 * @param other
 	 */
-    public MutableDateTime(IDateTime other) {
+    public MutableDateTime(DateTime other) {
     	super(other);
     }
 
@@ -337,7 +337,7 @@ public class MutableDateTime extends AbstractDateTime implements java.io.Seriali
      * @param secs seconds from 0 to 59
      * @return int milliseconds from midnight of any _dayOfYear
      */
-    public IDateTime setHoursMinutesSeconds(int hours, int mins, int secs) {
+    public DateTime setHoursMinutesSeconds(int hours, int mins, int secs) {
         _time = (hours * MillisInHour) + (mins * MillisInMinute) + (secs * MillisInSecond);
         return this;
     }
@@ -351,7 +351,7 @@ public class MutableDateTime extends AbstractDateTime implements java.io.Seriali
      * @param smillis integer milliseonds (0..999)
      * @return MutableDateTime
      */
-    public IDateTime setHoursMinutesSecondsMillis(int hours, int mins, int secs, int smillis) {
+    public DateTime setHoursMinutesSecondsMillis(int hours, int mins, int secs, int smillis) {
         int pinMillis = smillis % MillisInSecond;
         _time = (hours * MillisInHour) + (mins * MillisInMinute) + (secs * MillisInSecond) + pinMillis;
         return this;
@@ -364,7 +364,7 @@ public class MutableDateTime extends AbstractDateTime implements java.io.Seriali
      * @param millis integer
      * @return MutableDateTime
      */
-    public IDateTime setMillisSinceMidnight(int millis) {
+    public DateTime setMillisSinceMidnight(int millis) {
         _time = millis % MillisInDay;
         return this;
     }
@@ -372,7 +372,7 @@ public class MutableDateTime extends AbstractDateTime implements java.io.Seriali
 
     /**
      * Set the _holidays function for this date only.
-     * The Holiday function is a IDateTimePredicate that
+     * The Holiday function is a DateTimePredicate that
      * returns true if the given date is considered
      * a holiday. The Date object supports pluggable
      * _holidays at either class and instance levels.
@@ -380,11 +380,11 @@ public class MutableDateTime extends AbstractDateTime implements java.io.Seriali
      * @param holidayz holiday function
      *
      * @see AbstractDateTime#setDefaultHolidays Holiday Default
-     * @see IDateTimePredicate
+     * @see DateTimePredicate
      * @see AbstractDateTime#nextBusinessDay Business Day
      * @see AbstractDateTime#isHoliday Holiday Query
      */
-    public void setHolidays(IDateTimePredicate holidayz) {
+    public void setHolidays(DateTimePredicate holidayz) {
         _holidays = holidayz;
     }
 
@@ -399,7 +399,7 @@ public class MutableDateTime extends AbstractDateTime implements java.io.Seriali
 	 *
 	 * @param numYears number of yearsTo to increment/decrement
 	 */
-	public IDateTime rollYears(int numYears) {
+	public DateTime rollYears(int numYears) {
 		_year += numYears;
 		return this;
 	}
@@ -519,7 +519,7 @@ public class MutableDateTime extends AbstractDateTime implements java.io.Seriali
      * @param before MutableDateTime
      * @return DateTimeGenerator
      */
-    public DateTimeIterator businessDaysInMonthBefore(IDateTime before) {
+    public DateTimeIterator businessDaysInMonthBefore(DateTime before) {
         DateTimeRange range = boundsForMonth();
         range = new DateTimeRange(range.lower(), before);
         return new BoundedDateTimeIterator(range, DateTimeIterator.businessDay());
@@ -530,12 +530,12 @@ public class MutableDateTime extends AbstractDateTime implements java.io.Seriali
      * @param before MutableDateTime
      * @return DateTimeGenerator
      */
-    public DateTimeIterator businessDaysBefore(IDateTime before) {
+    public DateTimeIterator businessDaysBefore(DateTime before) {
         DateTimeRange range = new DateTimeRange(this, before);
         return new BoundedDateTimeIterator(range, DateTimeIterator.businessDay());
     }
 
-    public DateTimeIterator businessDaysBeforeNthWeekday(IDateTime before, int nth, int weekdayIndex) {
+    public DateTimeIterator businessDaysBeforeNthWeekday(DateTime before, int nth, int weekdayIndex) {
         DateTimeRange range = new DateTimeRange(this, before);
         return new BoundedDateTimeIterator(range, DateTimeIterator.businessDay());
     }
@@ -557,10 +557,10 @@ public class MutableDateTime extends AbstractDateTime implements java.io.Seriali
      * @param n occurrence
      * @return MutableDateTime
      */
-    public IDateTime nthBusinessDayOfMonth(int n) {
+    public DateTime nthBusinessDayOfMonth(int n) {
         DateTimeIterator bizdays = businessDaysInMonth();
         int target = 0;
-        IDateTime dt = null;
+        DateTime dt = null;
         while(bizdays.hasNext()) {
             target++;
             dt = bizdays.next();
@@ -579,7 +579,7 @@ public class MutableDateTime extends AbstractDateTime implements java.io.Seriali
      * @param dayOfWeek day-of-week (0..6)
      * @return MutableDateTime
      */
-    public IDateTime nthWeekdayOfMonth(int nth, int dayOfWeek) {
+    public DateTime nthWeekdayOfMonth(int nth, int dayOfWeek) {
         if (dayOfWeek > 6) return null;
         return nthWeekdayHelper(nth,dayOfWeek,false);
     }
@@ -592,7 +592,7 @@ public class MutableDateTime extends AbstractDateTime implements java.io.Seriali
      * @param dayOfWeek (0..6) starting on Monday
      * @return MutableDateTime
      */
-    public IDateTime nthBusinessWeekdayOfMonth(int nth, int dayOfWeek) {
+    public DateTime nthBusinessWeekdayOfMonth(int nth, int dayOfWeek) {
         if (dayOfWeek > 4) return null;
         return nthWeekdayHelper(nth,dayOfWeek,true);
     }
@@ -605,7 +605,7 @@ public class MutableDateTime extends AbstractDateTime implements java.io.Seriali
      * @param checkHolidays boolean
      * @return MutableDateTime
      */
-    private IDateTime nthWeekdayHelper(int nth, int dayOfWeek, boolean checkHolidays) {
+    private DateTime nthWeekdayHelper(int nth, int dayOfWeek, boolean checkHolidays) {
         if (nth < 1) return null;
         if (dayOfWeek < 0) return null;
 
@@ -636,7 +636,7 @@ public class MutableDateTime extends AbstractDateTime implements java.io.Seriali
      * @param nth last nth index (0..N counting from last _dayOfYear)
      * @return MutableDateTime
      */
-    public IDateTime lastNthBusinessDayOfMonth(int nth) {
+    public DateTime lastNthBusinessDayOfMonth(int nth) {
         return lastNthBusinessDayOfMonthBefore(nth, null);
     }
 
@@ -652,9 +652,9 @@ public class MutableDateTime extends AbstractDateTime implements java.io.Seriali
      * @param nth last nth index (0..N counting from last _dayOfYear)
      * @return MutableDateTime
      */
-    public IDateTime lastNthBusinessDayOfMonthBefore(int nth, IDateTime before) {
+    public DateTime lastNthBusinessDayOfMonthBefore(int nth, DateTime before) {
         DateTimeIterator gen = (before != null) ? businessDaysInMonthBefore(before) : businessDaysInMonth();
-        ArrayList<IDateTime> days = new ArrayList<>();
+        ArrayList<DateTime> days = new ArrayList<>();
         while(gen.hasNext()) days.add(gen.next());
         int size = days.size();
         if (nth >= size) return null;
@@ -674,11 +674,11 @@ public class MutableDateTime extends AbstractDateTime implements java.io.Seriali
      * @param wkday
      * @return
      */
-    public IDateTime lastNthBusinessDayOfMonthBeforeIthWeekday(int nth, int ith, int wkday) {
-        IDateTime dt = nthBusinessWeekdayOfMonth(ith,wkday);
+    public DateTime lastNthBusinessDayOfMonthBeforeIthWeekday(int nth, int ith, int wkday) {
+        DateTime dt = nthBusinessWeekdayOfMonth(ith,wkday);
         if (dt == null) return null;
         DateTimeIterator gen = this.businessDaysBefore(dt);
-        ArrayList<IDateTime> days = new ArrayList<>();
+        ArrayList<DateTime> days = new ArrayList<>();
         while(gen.hasNext()) days.add(gen.next());
         int size = days.size();
         if (nth >= size) return null;
@@ -705,11 +705,11 @@ public class MutableDateTime extends AbstractDateTime implements java.io.Seriali
      * Answer new MutableDateTime based on input string and given format
      *  
      * @param dtString
-     * @param format IDateTimeFormat
+     * @param format DateTimeFormat
      * @return MutableDateTime
      * @throws ParseException
      */
-    public static MutableDateTime parse(String dtString, IDateTimeFormat format) throws ParseException {
+    public static MutableDateTime parse(String dtString, DateTimeFormat format) throws ParseException {
         return (MutableDateTime)format.parseToDateTime(new MutableDateTime(), dtString);
     }
     

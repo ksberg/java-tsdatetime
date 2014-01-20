@@ -71,8 +71,8 @@ public class Test4DateTimeAddTime extends TestCase {
         assertTrue("Zero time", before1 == 0);
         assertEquals("Mutable == Immutable", before1, before2);
 
-        IDateTime dAfter1 = dBefore1.addMillis(1);
-        IDateTime dAfter2 = dBefore2.addMillis(1);
+        DateTime dAfter1 = dBefore1.addMillis(1);
+        DateTime dAfter2 = dBefore2.addMillis(1);
         int after1 = dAfter1.millisecondsSinceMidnight();
         int after2 = dAfter2.millisecondsSinceMidnight();
         assertTrue("1ms", after1 == 1);
@@ -98,8 +98,8 @@ public class Test4DateTimeAddTime extends TestCase {
         assertTrue("Zero time", before1 == 0);
         assertEquals("Mutable == Immutable", before1, before2);
 
-        IDateTime dAfterI = dBeforeI.addMillis(IDateTime.MillisInDay+1);
-        IDateTime dAfterM = dBeforeM.addMillis(IDateTime.MillisInDay+1);
+        DateTime dAfterI = dBeforeI.addMillis(DateTime.MillisInDay+1);
+        DateTime dAfterM = dBeforeM.addMillis(DateTime.MillisInDay+1);
 
         int mssmI = dAfterI.millisecondsSinceMidnight();
         int mssmM = dAfterM.millisecondsSinceMidnight();
@@ -111,7 +111,7 @@ public class Test4DateTimeAddTime extends TestCase {
 
             System.out.println("dAfter1.millisecondsSinceMidnight() = " + mssmI);
             System.out.println("dAfter2.millisecondsSinceMidnight() = " + mssmM);
-            System.out.println("MillisInDay = " + IDateTime.MillisInDay);
+            System.out.println("MillisInDay = " + DateTime.MillisInDay);
         }
 
 
@@ -123,8 +123,8 @@ public class Test4DateTimeAddTime extends TestCase {
         assertEquals("Expect same object",dBeforeM, dAfterM);
 
 
-        IDateTime dAfterI2 = dAfterI.addMillis(1 + 2*IDateTime.MillisInDay);
-        IDateTime dAfterM2 = dAfterM.addMillis(1 + 2*IDateTime.MillisInDay);
+        DateTime dAfterI2 = dAfterI.addMillis(1 + 2* DateTime.MillisInDay);
+        DateTime dAfterM2 = dAfterM.addMillis(1 + 2* DateTime.MillisInDay);
 
         mssmI = dAfterI2.millisecondsSinceMidnight();
         mssmM = dAfterM2.millisecondsSinceMidnight();
@@ -155,8 +155,8 @@ public class Test4DateTimeAddTime extends TestCase {
         assertTrue("Zero time", mssmI == 0);
         assertEquals("Mutable == Immutable", mssmI, mssmM);
 
-        IDateTime dAfterI = dBeforeI.addMillis(0);
-        IDateTime dAfterM = dBeforeM.addMillis(0);
+        DateTime dAfterI = dBeforeI.addMillis(0);
+        DateTime dAfterM = dBeforeM.addMillis(0);
         mssmI = dAfterI.millisecondsSinceMidnight();
         mssmM = dAfterM.millisecondsSinceMidnight();
 
@@ -184,8 +184,8 @@ public class Test4DateTimeAddTime extends TestCase {
         assertTrue("Zero time", before1 == 0);
         assertEquals("Mutable == Immutable", before1, before2);
 
-        IDateTime dAfterI = dBeforeI.addMillis(-1);
-        IDateTime dAfterM = dBeforeM.addMillis(-1);
+        DateTime dAfterI = dBeforeI.addMillis(-1);
+        DateTime dAfterM = dBeforeM.addMillis(-1);
 
         int mssmI = dAfterI.millisecondsSinceMidnight();
         int mssmM = dAfterM.millisecondsSinceMidnight();
@@ -197,11 +197,11 @@ public class Test4DateTimeAddTime extends TestCase {
 
             System.out.println("dAfter1.millisecondsSinceMidnight() = " + mssmI);
             System.out.println("dAfter2.millisecondsSinceMidnight() = " + mssmM);
-            System.out.println("MillisInDay = " + IDateTime.MillisInDay);
+            System.out.println("MillisInDay = " + DateTime.MillisInDay);
         }
 
 
-        assertTrue("Roll Millis From Day Millis Max", mssmI == IDateTime.MillisInDay-1);
+        assertTrue("Roll Millis From Day Millis Max", mssmI == DateTime.MillisInDay-1);
         assertEquals("Mutable == Immutable", mssmI, mssmM);
         assertTrue("Roll back Days", dAfterI.day() == dBeforeI.day() - 1);
         assertTrue("Roll back Days", dAfterM.day() == dBeforeI.day() - 1);
@@ -209,8 +209,8 @@ public class Test4DateTimeAddTime extends TestCase {
         assertEquals("Expect same object",dBeforeM, dAfterM);
 
 
-        IDateTime dAfterI2 = dAfterI.addMillis(-IDateTime.MillisInDay);
-        IDateTime dAfterM2 = dAfterM.addMillis(-IDateTime.MillisInDay);
+        DateTime dAfterI2 = dAfterI.addMillis(-DateTime.MillisInDay);
+        DateTime dAfterM2 = dAfterM.addMillis(-DateTime.MillisInDay);
 
         mssmI = dAfterI2.millisecondsSinceMidnight();
         mssmM = dAfterM2.millisecondsSinceMidnight();
@@ -223,13 +223,13 @@ public class Test4DateTimeAddTime extends TestCase {
             System.out.println("dAfter2.millisecondsSinceMidnight() = " + mssmM);
         }
 
-        assertTrue("Roll Millis From Day Millis Max", mssmI == IDateTime.MillisInDay-1);
+        assertTrue("Roll Millis From Day Millis Max", mssmI == DateTime.MillisInDay-1);
         assertEquals("Mutable == Immutable", mssmI, mssmM);
         assertTrue("Roll back Days dAfterI2", dAfterI2.day() == dAfterI.day() - 1);
         assertTrue("Roll back Days dAfterM2", dAfterM2.day() == dAfterI.day() - 1);
 
-        IDateTime dAfterI3 = dAfterI2.addMillis(-1-IDateTime.MillisInDay);
-        IDateTime dAfterM3 = dAfterM2.addMillis(-1-IDateTime.MillisInDay);
+        DateTime dAfterI3 = dAfterI2.addMillis(-1- DateTime.MillisInDay);
+        DateTime dAfterM3 = dAfterM2.addMillis(-1- DateTime.MillisInDay);
 
         mssmI = dAfterI3.millisecondsSinceMidnight();
         mssmM = dAfterM3.millisecondsSinceMidnight();
@@ -242,7 +242,7 @@ public class Test4DateTimeAddTime extends TestCase {
             System.out.println("dAfter2.millisecondsSinceMidnight() = " + mssmM);
         }
 
-        assertTrue("Roll Millis From Day Millis Max", mssmI == IDateTime.MillisInDay-2);
+        assertTrue("Roll Millis From Day Millis Max", mssmI == DateTime.MillisInDay-2);
         assertEquals("Mutable == Immutable", mssmI, mssmM);
         assertTrue("Roll back Days dAfterI3", dAfterI3.day() == dAfterI2.day() - 1);
         assertTrue("Roll back Days dAfterM3", dAfterM3.day() == dAfterI2.day() - 1);
@@ -261,8 +261,8 @@ public class Test4DateTimeAddTime extends TestCase {
         assertTrue("Zero time", before1 == 0);
         assertEquals("Mutable == Immutable", before1, before2);
 
-        IDateTime dAfter1 = dBefore1.addSeconds(1);
-        IDateTime dAfter2 = dBefore2.addSeconds(1);
+        DateTime dAfter1 = dBefore1.addSeconds(1);
+        DateTime dAfter2 = dBefore2.addSeconds(1);
         int after1 = dAfter1.seconds();
         int after2 = dAfter2.seconds();
 
@@ -286,8 +286,8 @@ public class Test4DateTimeAddTime extends TestCase {
         assertTrue("Zero time", before1 == 0);
         assertEquals("Mutable == Immutable", before1, before2);
 
-        IDateTime dAfter1 = dBefore1.addMinutes(1);
-        IDateTime dAfter2 = dBefore2.addMinutes(1);
+        DateTime dAfter1 = dBefore1.addMinutes(1);
+        DateTime dAfter2 = dBefore2.addMinutes(1);
         int after1 = dAfter1.minutes();
         int after2 = dAfter2.minutes();
 
@@ -311,8 +311,8 @@ public class Test4DateTimeAddTime extends TestCase {
         assertTrue("Zero time", before1 == 0);
         assertEquals("Mutable == Immutable", before1, before2);
 
-        IDateTime dAfter1 = dBefore1.addHours(1);
-        IDateTime dAfter2 = dBefore2.addHours(1);
+        DateTime dAfter1 = dBefore1.addHours(1);
+        DateTime dAfter2 = dBefore2.addHours(1);
         int after1 = dAfter1.hours();
         int after2 = dAfter2.hours();
 
@@ -335,8 +335,8 @@ public class Test4DateTimeAddTime extends TestCase {
 //        int before = dBefore1.day();
 //        assertEquals("Mutable day() == Immutable day()", before, dBefore2.day());
 //
-//        IDateTime dAfter1 = dBefore1.addDays(1);
-//        IDateTime dAfter2 = dBefore2.addDays(1);
+//        DateTime dAfter1 = dBefore1.addDays(1);
+//        DateTime dAfter2 = dBefore2.addDays(1);
 //        int after = dAfter1.day();
 //
 //        assertTrue("Expect Day 5", before == 5);
@@ -358,8 +358,8 @@ public class Test4DateTimeAddTime extends TestCase {
 //        assertEquals("Mutable month() == Immutable month()", dBefore1.month(),dBefore2.month());
 //
 //        int before = dBefore1.month();
-//        IDateTime dAfter1 = dBefore1.rollMonths(1);
-//        IDateTime dAfter2 = dBefore2.rollMonths(1);
+//        DateTime dAfter1 = dBefore1.rollMonths(1);
+//        DateTime dAfter2 = dBefore2.rollMonths(1);
 //        int after = dAfter1.month();
 //
 //        assertTrue("Expect Month 4",before == 4);
@@ -382,8 +382,8 @@ public class Test4DateTimeAddTime extends TestCase {
 //        assertEquals("Mutable year() == Immutable year()", dBefore1.year(),dBefore2.year());
 //
 //        int before = dBefore1.year();
-//        IDateTime dAfter1 = dBefore1.addYears(1);
-//        IDateTime dAfter2 = dBefore2.addYears(1);
+//        DateTime dAfter1 = dBefore1.addYears(1);
+//        DateTime dAfter2 = dBefore2.addYears(1);
 //        int after = dAfter1.year();
 //
 //        assertTrue("Expect Month 4",before == 2003);
@@ -404,7 +404,7 @@ public class Test4DateTimeAddTime extends TestCase {
 //
 //        assertEquals("Mutable intRep() == Immutable intRep()", dBefore1.intRep(),dBefore2.intRep());
 //
-//        IDateTime dAfter2 = dBefore2.addYears(1);
+//        DateTime dAfter2 = dBefore2.addYears(1);
 //        assertTrue("Immutable Rep Unchanged after addYears()",   dBefore1.intRep() != dBefore2.intRep());
 //        assertEquals("Expect same object", dBefore2, dAfter2);
 //    }
@@ -419,8 +419,8 @@ public class Test4DateTimeAddTime extends TestCase {
 //
 //        assertEquals("Mutable dayOfYear() == Immutable dayOfYear()", dBefore1.dayOfYear(),dBefore2.dayOfYear());
 //
-//        IDateTime dAfter1 = dBefore1.addDays(1);
-//        IDateTime dAfter2 = dBefore2.addDays(1);
+//        DateTime dAfter1 = dBefore1.addDays(1);
+//        DateTime dAfter2 = dBefore2.addDays(1);
 //        assertTrue("Immutable year() Unchanged after addYears()",   dBefore1.dayOfYear() != dBefore2.dayOfYear());
 //        assertTrue("Immutable addYears() == mutable.addYears()",    dAfter1.dayOfYear() == dAfter2.dayOfYear());
 //        assertEquals("Expect same object", dBefore2, dAfter2);
@@ -436,8 +436,8 @@ public class Test4DateTimeAddTime extends TestCase {
 //
 //        assertEquals("Mutable dayOfWeek() == Immutable dayOfWeek()", dBefore1.dayOfWeek(),dBefore2.dayOfWeek());
 //
-//        IDateTime dAfter1 = dBefore1.rollToDayOfWeek(2);
-//        IDateTime dAfter2 = dBefore2.rollToDayOfWeek(2);
+//        DateTime dAfter1 = dBefore1.rollToDayOfWeek(2);
+//        DateTime dAfter2 = dBefore2.rollToDayOfWeek(2);
 //        assertTrue("Immutable year() Unchanged after addYears()",   dBefore1.dayOfYear() != dBefore2.dayOfYear());
 //        assertTrue("Immutable addYears() == mutable.addYears()",    dAfter1.dayOfYear() == dAfter2.dayOfYear());
 //        assertTrue("Expected Day of Week", "Wednesday".equalsIgnoreCase(dAfter1.dayName()));
@@ -456,8 +456,8 @@ public class Test4DateTimeAddTime extends TestCase {
 ////
 ////        assertEquals("Mutable dayOfWeek() == Immutable dayOfWeek()", dBefore1.businessDayOfMonth(),dBefore2.businessDayOfMonth());
 ////
-////        IDateTime dAfter1 = dBefore1.nextBusinessDay();
-////        IDateTime dAfter2 = dBefore2.nextBusinessDay();
+////        DateTime dAfter1 = dBefore1.nextBusinessDay();
+////        DateTime dAfter2 = dBefore2.nextBusinessDay();
 ////        assertTrue("Immutable year() Unchanged after addYears()",   dBefore1.businessDayOfMonth() != dBefore2.businessDayOfMonth());
 ////        assertTrue("Immutable addYears() == mutable.addYears()",    dAfter1.businessDayOfMonth() == dAfter2.businessDayOfMonth());
 ////        assertEquals("Expect same object", dBefore2, dAfter2);
@@ -493,8 +493,8 @@ public class Test4DateTimeAddTime extends TestCase {
 //
 //        assertEquals("Mutable weekOfMonth() == Immutable weekOfMonth()", dBefore1.weekOfMonth(),dBefore2.weekOfMonth());
 //        int before = dBefore1.weekOfMonth();
-//        IDateTime dAfter1 = dBefore1.addWeeks(1);
-//        IDateTime dAfter2 = dBefore2.addWeeks(1);
+//        DateTime dAfter1 = dBefore1.addWeeks(1);
+//        DateTime dAfter2 = dBefore2.addWeeks(1);
 //        int after = dAfter1.weekOfMonth();
 //        assertTrue("Sequential Weeks", after == before + 1);
 //
@@ -513,8 +513,8 @@ public class Test4DateTimeAddTime extends TestCase {
 //
 //        assertEquals("Mutable weekOfYear() == Immutable weekOfYear()", dBefore1.weekOfYear(),dBefore2.weekOfYear());
 //        int before = dBefore1.weekOfYear();
-//        IDateTime dAfter1 = dBefore1.addWeeks(1);
-//        IDateTime dAfter2 = dBefore2.addWeeks(1);
+//        DateTime dAfter1 = dBefore1.addWeeks(1);
+//        DateTime dAfter2 = dBefore2.addWeeks(1);
 //        int after = dAfter1.weekOfYear();
 //        assertTrue("Sequential Weeks", after == before + 1);
 //

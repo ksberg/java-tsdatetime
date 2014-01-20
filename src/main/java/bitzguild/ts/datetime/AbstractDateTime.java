@@ -66,18 +66,18 @@ import bitzguild.ts.datetime.format.CompactDateTimeFormat;
  *
  * @see bitzguild.ts.datetime.MutableDateTime
  * @see bitzguild.ts.datetime.ImmutableDateTime
- * @see IDateTimePredicate
+ * @see DateTimePredicate
  *
  * @author Kevin Sven Berg
  */
-public abstract class AbstractDateTime extends DateUtil implements IDateTime, java.io.Serializable {
+public abstract class AbstractDateTime extends DateUtil implements DateTime, java.io.Serializable {
 
 	public static final long serialVersionUID = 1L;
 
 	public static final boolean DEBUG = false;
 
-	public static IDateTimePredicate DefaultHolidays = new USHolidays();
-    public static IDateTimeFormat DefaultParserRenderer = new CompactDateTimeFormat();
+	public static DateTimePredicate DefaultHolidays = new USHolidays();
+    public static DateTimeFormat DefaultParserRenderer = new CompactDateTimeFormat();
     public static DaysAndMonths DefaultDayMonthNames = new DaysAndMonthsForEnglish();
 
     // --------------------------------------------
@@ -89,8 +89,8 @@ public abstract class AbstractDateTime extends DateUtil implements IDateTime, ja
      * @param pr
      * @return
      */
-    public static IDateTimeFormat defaultDateTimeFormat(IDateTimeFormat pr) {
-        IDateTimeFormat prior = DefaultParserRenderer;
+    public static DateTimeFormat defaultDateTimeFormat(DateTimeFormat pr) {
+        DateTimeFormat prior = DefaultParserRenderer;
         DefaultParserRenderer = pr;
         return prior;
     }
@@ -99,7 +99,7 @@ public abstract class AbstractDateTime extends DateUtil implements IDateTime, ja
      *
      * @return
      */
-    public static IDateTimeFormat getDefaultDateTimeFormat() {
+    public static DateTimeFormat getDefaultDateTimeFormat() {
         return DefaultParserRenderer;
     }
 
@@ -108,7 +108,7 @@ public abstract class AbstractDateTime extends DateUtil implements IDateTime, ja
      *
      * @param h
      */
-    public static void setDefaultHolidays(IDateTimePredicate h) {
+    public static void setDefaultHolidays(DateTimePredicate h) {
         DefaultHolidays = h;
     }
 
@@ -119,7 +119,7 @@ public abstract class AbstractDateTime extends DateUtil implements IDateTime, ja
     protected int 	_year;          // Gregorian Year, e.g. 1945
 	protected int 	_dayOfYear;     // Day Of Year with January 1st = 1
     protected int	_time;			// milliseconds since midnight
-	protected IDateTimePredicate _holidays = DefaultHolidays;
+	protected DateTimePredicate _holidays = DefaultHolidays;
 
 	// --------------------------------------------
 	// Existence
@@ -143,7 +143,7 @@ public abstract class AbstractDateTime extends DateUtil implements IDateTime, ja
         _holidays = DefaultHolidays;
 	}
 	
-	protected AbstractDateTime(IDateTime other) {
+	protected AbstractDateTime(DateTime other) {
 		_year = other.year();
 		_dayOfYear = other.dayOfYear();
 		_time = other.millisecondsSinceMidnight();
@@ -155,9 +155,9 @@ public abstract class AbstractDateTime extends DateUtil implements IDateTime, ja
      *
      * @param year integer year (e.g. 1945)
      * @param dayOfYear int day of year (e.g. 365)
-     * @param holidays IDateTimePredicate
+     * @param holidays DateTimePredicate
      */
-    public AbstractDateTime(int year, int dayOfYear, IDateTimePredicate holidays) {
+    public AbstractDateTime(int year, int dayOfYear, DateTimePredicate holidays) {
         _year = year;
         _dayOfYear = dayOfYear;
         _time = 0;
@@ -221,7 +221,7 @@ public abstract class AbstractDateTime extends DateUtil implements IDateTime, ja
 	 * @param that date.
 	 * @return int -1 if less, 0 if equal, 1 if greater
 	 */
-	public int compareTo(IDateTime that) {
+	public int compareTo(DateTime that) {
 
 		if (this._year > that.year()) return 1;
 		if (this._year < that.year()) return -1;
@@ -246,9 +246,9 @@ public abstract class AbstractDateTime extends DateUtil implements IDateTime, ja
 	 * @return boolean whether equal
 	 */
 	public boolean equals(Object o) {
-		if (!(o instanceof IDateTime)) return false;
-		if (_holidays != ((IDateTime)o).holidays()) return false;
-		return compareTo((IDateTime)o) == 0;
+		if (!(o instanceof DateTime)) return false;
+		if (_holidays != ((DateTime)o).holidays()) return false;
+		return compareTo((DateTime)o) == 0;
 	}
 
 
@@ -263,10 +263,10 @@ public abstract class AbstractDateTime extends DateUtil implements IDateTime, ja
      * @param dateZ ending date
      * @return double fractional yearsTo
      */
-    public double yearsTo(IDateTime dateZ) {
+    public double yearsTo(DateTime dateZ) {
         double fracYears =  0.0;
 
-        IDateTime dateFrom, dateTo;
+        DateTime dateFrom, dateTo;
         if (this.compareTo(dateZ) < 0) {
             dateFrom = this;
             dateTo = dateZ;
@@ -301,9 +301,9 @@ public abstract class AbstractDateTime extends DateUtil implements IDateTime, ja
     /**
      * Answer predicate function that indicates holidays.
      *
-     * @return IDateTimePredicate
+     * @return DateTimePredicate
      */
-    public IDateTimePredicate holidays() {
+    public DateTimePredicate holidays() {
         return _holidays;
     }
 
@@ -476,7 +476,7 @@ public abstract class AbstractDateTime extends DateUtil implements IDateTime, ja
         return (_dayOfYear / 7) + 1;
     }
 
-    public IDateTimePredicate getHolidays() {
+    public DateTimePredicate getHolidays() {
 		return _holidays;
 	}
 
@@ -612,7 +612,7 @@ public abstract class AbstractDateTime extends DateUtil implements IDateTime, ja
      * @param smillis
      * @return
      */
-    public IDateTime _setHoursMinutesSecondsMillis(int hours, int mins, int secs, int smillis) {
+    public DateTime _setHoursMinutesSecondsMillis(int hours, int mins, int secs, int smillis) {
     	int pinMillis = smillis % MillisInSecond;
     	
         _time = (hours * MillisInHour) + (mins * MillisInMinute) + (secs * MillisInSecond) + pinMillis;
@@ -658,7 +658,7 @@ public abstract class AbstractDateTime extends DateUtil implements IDateTime, ja
      * @param amount milliseconds
      * @return MutableDateTime
      */
-    public IDateTime addMillis(int amount) {
+    public DateTime addMillis(int amount) {
         return addDays(_addMillisWithBalance(amount));
     }
 
@@ -667,7 +667,7 @@ public abstract class AbstractDateTime extends DateUtil implements IDateTime, ja
      * @param amount
      * @return
      */
-    public IDateTime addSeconds(int amount) {
+    public DateTime addSeconds(int amount) {
         return addDays(_addMillisWithBalance(MilliFactors[SECOND] * amount));
     }
 
@@ -676,7 +676,7 @@ public abstract class AbstractDateTime extends DateUtil implements IDateTime, ja
      * @param amount
      * @return
      */
-    public IDateTime addMinutes(int amount) {
+    public DateTime addMinutes(int amount) {
         return addDays(_addMillisWithBalance(MilliFactors[MINUTE] * amount));
     }
 
@@ -685,7 +685,7 @@ public abstract class AbstractDateTime extends DateUtil implements IDateTime, ja
      * @param amount
      * @return
      */
-    public IDateTime addHours(int amount) {
+    public DateTime addHours(int amount) {
         return addDays(_addMillisWithBalance(MilliFactors[HOUR] * amount));
     }
 
@@ -703,7 +703,7 @@ public abstract class AbstractDateTime extends DateUtil implements IDateTime, ja
 	 * @param numDays number of days
 	 * @return Date the original object
 	 */
-	public IDateTime addDays(int numDays) {
+	public DateTime addDays(int numDays) {
 
         int day, year, daysInYear;
 
@@ -730,7 +730,7 @@ public abstract class AbstractDateTime extends DateUtil implements IDateTime, ja
 	 * @param numDays numDays
 	 * @return Date instance
 	 */
-	public IDateTime addBusinessDays(int numDays) {
+	public DateTime addBusinessDays(int numDays) {
 		if (numDays > 0) {
 			while(numDays-- > 0)
 				nextBusinessDay();
@@ -755,7 +755,7 @@ public abstract class AbstractDateTime extends DateUtil implements IDateTime, ja
 	 * @param numWeeks number of weeks
 	 * @return Date the original object
 	 */
-	public IDateTime addWeeks(int numWeeks) {
+	public DateTime addWeeks(int numWeeks) {
         return addDays(numWeeks*7);
 	}
 
@@ -764,7 +764,7 @@ public abstract class AbstractDateTime extends DateUtil implements IDateTime, ja
      * @param amount
      * @return
      */
-    public IDateTime addMonths(int amount) {
+    public DateTime addMonths(int amount) {
         this.rollMonths(amount);
         return this;
     }
@@ -774,7 +774,7 @@ public abstract class AbstractDateTime extends DateUtil implements IDateTime, ja
      * @param amount
      * @return
      */
-    public IDateTime addQuarters(int amount) {
+    public DateTime addQuarters(int amount) {
         this.rollMonths(3 * amount);
         return this;
     }
@@ -799,7 +799,7 @@ public abstract class AbstractDateTime extends DateUtil implements IDateTime, ja
 	 *
 	 * @see AbstractDateTime#rollYears
 	 */
-	public IDateTime addYears(int numberOfYears) {
+	public DateTime addYears(int numberOfYears) {
 		_year += numberOfYears;
 		int daysInYear = daysInYear(_year);
 		_dayOfYear = (_dayOfYear > daysInYear) ? daysInYear : _dayOfYear;
@@ -810,7 +810,7 @@ public abstract class AbstractDateTime extends DateUtil implements IDateTime, ja
 	 *
 	 * @return Date the original object
 	 */
-	public IDateTime rollbackToDayOfWeek(int dayOfWeek) {
+	public DateTime rollbackToDayOfWeek(int dayOfWeek) {
 		int currentDayOfWeek = dayOfWeek();
 		if(currentDayOfWeek == dayOfWeek)
 			return this;
@@ -830,7 +830,7 @@ public abstract class AbstractDateTime extends DateUtil implements IDateTime, ja
 	*   LOW:  Jan 31, Feb 28, Mar 28, Apr 28
 	* @return Date the original object
 	*/
-	public IDateTime rollMonths(int num) {
+	public DateTime rollMonths(int num) {
 
 		int imo = month() - 1;		// zero based month
 		int targetYear = year();
@@ -861,7 +861,7 @@ public abstract class AbstractDateTime extends DateUtil implements IDateTime, ja
         return this;
 	}
 
-	public IDateTime rollToDayOfWeek(int dayOfWeek) {
+	public DateTime rollToDayOfWeek(int dayOfWeek) {
 		int currentDayOfWeek = dayOfWeek();
 		if(currentDayOfWeek == dayOfWeek)
 			return this;
@@ -874,7 +874,7 @@ public abstract class AbstractDateTime extends DateUtil implements IDateTime, ja
 		return this;
 	}
 
-	public IDateTime nextBusinessDay() {
+	public DateTime nextBusinessDay() {
 		nextWeekday();
 		while(isHoliday()) {
 			nextWeekday();
@@ -883,7 +883,7 @@ public abstract class AbstractDateTime extends DateUtil implements IDateTime, ja
 		return this;
 	}
 
-	public IDateTime nextWeekday() {
+	public DateTime nextWeekday() {
 		addDays(1);
 		int dayOfWeek = dayOfWeek();
 		if(dayOfWeek > 4) {
@@ -893,7 +893,7 @@ public abstract class AbstractDateTime extends DateUtil implements IDateTime, ja
 		return this;
 	}
 
-	public IDateTime priorBusinessDay() {
+	public DateTime priorBusinessDay() {
 		priorWeekday();
 		while(isHoliday()) {
 			priorWeekday();
@@ -902,7 +902,7 @@ public abstract class AbstractDateTime extends DateUtil implements IDateTime, ja
 		return this;
 	}
 
-	public IDateTime priorWeekday() {
+	public DateTime priorWeekday() {
 		addDays(-1);
 		int dayOfWeek = dayOfWeek();
 		if(dayOfWeek > 5) addDays(4 - dayOfWeek);
@@ -910,14 +910,14 @@ public abstract class AbstractDateTime extends DateUtil implements IDateTime, ja
 		return this;
 	}
 
-	public IDateTime nextWeek() {
+	public DateTime nextWeek() {
 		int dayOfWeek = dayOfWeek();
 		addDays(7 - dayOfWeek);
         _time = 0;
 		return this;
 	}
 
-	public IDateTime nextMonth() {
+	public DateTime nextMonth() {
 
 		int year = year();
 		int month = month();
@@ -927,7 +927,7 @@ public abstract class AbstractDateTime extends DateUtil implements IDateTime, ja
 		return this;
 	}
 
-	public IDateTime nextQuarter() {
+	public DateTime nextQuarter() {
 		int year = year();
 		int month = month();
 		_setFromYearMonthDay(year, month, 1);
@@ -938,7 +938,7 @@ public abstract class AbstractDateTime extends DateUtil implements IDateTime, ja
 		return this;
 	}
 
-	public IDateTime nextYear() {
+	public DateTime nextYear() {
 		int year = year();
 		_setFromYearMonthDay(year + 1, 1, 1);
         _time = 0;
@@ -950,7 +950,7 @@ public abstract class AbstractDateTime extends DateUtil implements IDateTime, ja
 	 *
 	 * @param numYears number of yearsTo to increment/decrement
 	 */
-	public IDateTime rollYears(int numYears) {
+	public DateTime rollYears(int numYears) {
 		_year += numYears;
         if (this._dayOfYear > 365 && leapYearBalance(_year)==0) _dayOfYear--;
 		return this;
@@ -987,7 +987,7 @@ public abstract class AbstractDateTime extends DateUtil implements IDateTime, ja
      * on per object instance as necessary (if mutable).
 	 *
 	 * @return boolean whether given date falls on holiday
-	 * @see IDateTimePredicate Creating holiday functions <br>
+	 * @see DateTimePredicate Creating holiday functions <br>
 	 */
 	public boolean isHoliday() {
         return _holidays.apply(this);

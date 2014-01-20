@@ -70,7 +70,7 @@ import java.text.ParseException;
  * @see bitzguild.ts.datetime.AbstractDateTime
  * @see bitzguild.ts.datetime.MutableDateTime
  * @see bitzguild.ts.datetime.ImmutableDateTime
- * @see IDateTimePredicate
+ * @see DateTimePredicate
  *
  * @author Kevin Sven Berg
  */
@@ -103,9 +103,9 @@ public class ImmutableDateTime extends AbstractDateTime implements java.io.Seria
      *
      * @param year int
      * @param days int
-     * @param holidays IDateTimePredicate
+     * @param holidays DateTimePredicate
      */
-    protected ImmutableDateTime(int year, int days, IDateTimePredicate holidays) {
+    protected ImmutableDateTime(int year, int days, DateTimePredicate holidays) {
         super(year,days,holidays);
     }
 
@@ -115,7 +115,7 @@ public class ImmutableDateTime extends AbstractDateTime implements java.io.Seria
      *
      * @param d ImmutableDateTime
      */
-    public ImmutableDateTime(IDateTime d) {
+    public ImmutableDateTime(DateTime d) {
         super(d);
     }
 
@@ -125,7 +125,7 @@ public class ImmutableDateTime extends AbstractDateTime implements java.io.Seria
 	 * serial representation is a compact integer form that is strictly
 	 * increasing, like the Date object it represents, so that comparing
 	 * any two representations yields the same result as comparing two 
-	 * IDateTime objects.
+	 * DateTime objects.
 	 *
 	 * @param rep compact date representation
 	 */
@@ -317,7 +317,7 @@ public class ImmutableDateTime extends AbstractDateTime implements java.io.Seria
      * @param amount milliseconds
      * @return MutableDateTime
      */
-    public IDateTime addMillis(int amount) {
+    public DateTime addMillis(int amount) {
         return new ImmutableDateTime((new MutableDateTime(this)).addMillis(amount));
     }
 
@@ -326,7 +326,7 @@ public class ImmutableDateTime extends AbstractDateTime implements java.io.Seria
      * @param amount
      * @return
      */
-    public IDateTime addSeconds(int amount) {
+    public DateTime addSeconds(int amount) {
         return new ImmutableDateTime((new MutableDateTime(this)).addSeconds(amount));
     }
 
@@ -335,7 +335,7 @@ public class ImmutableDateTime extends AbstractDateTime implements java.io.Seria
      * @param amount
      * @return
      */
-    public IDateTime addMinutes(int amount) {
+    public DateTime addMinutes(int amount) {
         return new ImmutableDateTime((new MutableDateTime(this)).addMinutes(amount));
     }
 
@@ -344,72 +344,72 @@ public class ImmutableDateTime extends AbstractDateTime implements java.io.Seria
      * @param amount
      * @return
      */
-    public IDateTime addHours(int amount) {
+    public DateTime addHours(int amount) {
         return new ImmutableDateTime((new MutableDateTime(this)).addHours(amount));
     }
 
 
-    public IDateTime addDays(int numDays) {
+    public DateTime addDays(int numDays) {
         return new ImmutableDateTime(((new MutableDateTime(this)).addDays(numDays)).intRep());
     }
 
-    public IDateTime addBusinessDays(int numDays) {
+    public DateTime addBusinessDays(int numDays) {
         return new ImmutableDateTime(((new MutableDateTime(this)).addBusinessDays(numDays)).intRep());
     }
 
-    public IDateTime addWeeks(int numWeeks) {
+    public DateTime addWeeks(int numWeeks) {
         return new ImmutableDateTime(((new MutableDateTime(this)).addWeeks(numWeeks)).intRep());
     }
 
-    public IDateTime addYears(int numberOfYears) {
+    public DateTime addYears(int numberOfYears) {
         return new ImmutableDateTime(((new MutableDateTime(this)).addYears(numberOfYears)).intRep());
     }
 
-    public IDateTime rollbackToDayOfWeek(int dayOfWeek) {
+    public DateTime rollbackToDayOfWeek(int dayOfWeek) {
         return new ImmutableDateTime(((new MutableDateTime(this)).rollbackToDayOfWeek(dayOfWeek)).intRep());
     }
 
-    public IDateTime rollMonths(int num) {
+    public DateTime rollMonths(int num) {
         return new ImmutableDateTime(((new MutableDateTime(this)).rollMonths(num)).intRep());
     }
 
-    public IDateTime rollToDayOfWeek(int dayOfWeek) {
+    public DateTime rollToDayOfWeek(int dayOfWeek) {
         return new ImmutableDateTime(((new MutableDateTime(this)).rollToDayOfWeek(dayOfWeek)).intRep());
     }
 
-    public IDateTime nextBusinessDay() {
+    public DateTime nextBusinessDay() {
         return new ImmutableDateTime(((new MutableDateTime(this)).nextBusinessDay()).intRep());
     }
 
-    public IDateTime nextWeekday() {
+    public DateTime nextWeekday() {
         return new ImmutableDateTime(((new MutableDateTime(this)).nextWeekday()).intRep());
     }
 
-    public IDateTime nextWeek() {
+    public DateTime nextWeek() {
         return new ImmutableDateTime(((new MutableDateTime(this)).nextWeek()).intRep());
     }
 
-    public IDateTime nextMonth() {
+    public DateTime nextMonth() {
         return new ImmutableDateTime(((new MutableDateTime(this)).nextMonth()).intRep());
     }
 
-    public IDateTime nextQuarter() {
+    public DateTime nextQuarter() {
         return new ImmutableDateTime(((new MutableDateTime(this)).nextQuarter()).intRep());
     }
 
-    public IDateTime nextYear() {
+    public DateTime nextYear() {
         return new ImmutableDateTime(((new MutableDateTime(this)).nextYear()).intRep());
     }
 
-    public IDateTime rollYears(int numYears) {
+    public DateTime rollYears(int numYears) {
         return new ImmutableDateTime(((new MutableDateTime(this)).rollYears(numYears)).intRep());
     }
 
-    public IDateTime priorWeekday() {
+    public DateTime priorWeekday() {
         return new ImmutableDateTime(((new MutableDateTime(this)).priorWeekday()).intRep());
     }
 
-    public IDateTime priorBusinessDay() {
+    public DateTime priorBusinessDay() {
         return new ImmutableDateTime(((new MutableDateTime(this)).priorBusinessDay()).intRep());
     }
 
@@ -433,11 +433,11 @@ public class ImmutableDateTime extends AbstractDateTime implements java.io.Seria
      * Answer new MutableDateTime based on input string and given format
      *  
      * @param dtString
-     * @param format IDateTimeFormat
+     * @param format DateTimeFormat
      * @return MutableDateTime
      * @throws ParseException
      */
-    public static ImmutableDateTime parse(String dtString, IDateTimeFormat format) throws ParseException {
+    public static ImmutableDateTime parse(String dtString, DateTimeFormat format) throws ParseException {
     	MutableDateTime mdt = new MutableDateTime();
         mdt = (MutableDateTime)format.parseToDateTime(mdt, dtString);
         return new ImmutableDateTime(mdt); 

@@ -30,18 +30,18 @@
 
 package bitzguild.ts.datetime;
 
-public interface IDateTimeGeneration {
+public interface DateTimeGeneration {
 
     DateTimeIterator businessDaysInMonth();
     DateTimeIterator businessDaysInMonthBefore(MutableDateTime before);
     DateTimeIterator businessDaysBefore(MutableDateTime before);
     DateTimeIterator businessDaysBeforeNthWeekday(MutableDateTime before, int nth, int weekdayIndex);
     
-    public IDateTime nthBusinessDayOfMonth(int n);
-    public IDateTime nthWeekdayOfMonth(int nth, int dayOfWeek);
-    public IDateTime nthBusinessWeekdayOfMonth(int nth, int dayOfWeek);
-    public IDateTime lastNthBusinessDayOfMonth(int nth);
-    public IDateTime lastNthBusinessDayOfMonthBefore(int nth, IDateTime before);
-    public IDateTime lastNthBusinessDayOfMonthBeforeIthWeekday(int nth, int ith, int wkday);
+    public DateTime nthBusinessDayOfMonth(int n);
+    public DateTime nthWeekdayOfMonth(int nth, int dayOfWeek);
+    public DateTime nthBusinessWeekdayOfMonth(int nth, int dayOfWeek);
+    public DateTime lastNthBusinessDayOfMonth(int nth);
+    public DateTime lastNthBusinessDayOfMonthBefore(int nth, DateTime before);
+    public DateTime lastNthBusinessDayOfMonthBeforeIthWeekday(int nth, int ith, int wkday);
     
 }

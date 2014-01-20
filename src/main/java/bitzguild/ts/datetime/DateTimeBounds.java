@@ -30,7 +30,7 @@
 
 package bitzguild.ts.datetime;
 
-public interface IDateTimeBounds {
+public interface DateTimeBounds {
 
     DateTimeRange boundsForYear();
     DateTimeRange boundsForMonth();

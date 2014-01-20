@@ -47,7 +47,7 @@ package bitzguild.ts.datetime;
  * Creation _date: (7/19/2001 3:18:45 PM)
  * @author: Kevin Sven Berg
  */
-public class USHolidays implements IDateTimePredicate, java.io.Serializable {
+public class USHolidays implements DateTimePredicate, java.io.Serializable {
 
 	public static final long serialVersionUID = 1L;
 	
@@ -58,7 +58,7 @@ public class USHolidays implements IDateTimePredicate, java.io.Serializable {
 		super();
 	}
 
-	public boolean apply(IDateTime theDate) {
+	public boolean apply(DateTime theDate) {
 
 		int month 	= theDate.month();
 		int day 	= theDate.day();
@@ -89,12 +89,12 @@ public class USHolidays implements IDateTimePredicate, java.io.Serializable {
 		return false;
 	}
 
-	public boolean isMemorialDay(IDateTime theDate, int imo, int idy) {
+	public boolean isMemorialDay(DateTime theDate, int imo, int idy) {
 		if (idy > 24) return (theDate.dayOfWeek() == DaysAndMonths.MONDAY);
 		return false;
 	}
 
-	public boolean isLaborDay(IDateTime theDate, int imo, int idy) {
+	public boolean isLaborDay(DateTime theDate, int imo, int idy) {
 		if (idy < 8) return (theDate.dayOfWeek() == DaysAndMonths.MONDAY);
 		return false;
 	}
@@ -105,7 +105,7 @@ public class USHolidays implements IDateTimePredicate, java.io.Serializable {
 	* @param theDate the given _date
 	* @return boolean whether _date is in Thanksgiving holiday
 	*/
-	public boolean isThanksGiving(IDateTime theDate, int imo, int idy) {
+	public boolean isThanksGiving(DateTime theDate, int imo, int idy) {
 
 		int weekInMonth = theDate.weekOfMonth(); // must be in 4th or 5th week
 		if(weekInMonth < 4) return false;

@@ -34,7 +34,7 @@ import java.text.ParseException;
 
 /**
  * <p>
- * The IDateTimeFormat interface provides IDateTime parsing and rendering API.
+ * The DateTimeFormat interface provides DateTime parsing and rendering API.
  * It also includes a format descriptor and DaysAndMonths object that matches
  * the input/output.
  * </p>
@@ -50,21 +50,21 @@ import java.text.ParseException;
  * combination is significantly faster than StringBuilder/String format.
  * </p>
  */
-public interface IDateTimeFormat {
+public interface DateTimeFormat {
 
     /**
      *
      * @param dt receiving datetime
      * @param dtString string to parse
      */
-    IDateTime parseToDateTime(MutableDateTime dt, String dtString) throws ParseException;
+    DateTime parseToDateTime(MutableDateTime dt, String dtString) throws ParseException;
 
     /**
      *
      * @param date
      * @param sb
      */
-    StringBuffer renderToBuffer(IDateTime date, StringBuffer sb);
+    StringBuffer renderToBuffer(DateTime date, StringBuffer sb);
 
     /**
      *

@@ -38,7 +38,7 @@ import java.util.Iterator;
  * the standard iteration is desired. Use DateTimeIncrementer when top performance
  * is required (less object creation).
  */
-public class DateTimeIterator implements Iterator<IDateTime> {
+public class DateTimeIterator implements Iterator<DateTime> {
 
 	// ---------------------------------------------------------------------------
 	// Incrementer Functions
@@ -160,7 +160,7 @@ public class DateTimeIterator implements Iterator<IDateTime> {
 	 * @param start MutableDateTime
 	 * @param inc incrementer function
 	 */
-	public DateTimeIterator(IDateTime start, DateTimeIncrementer inc) {
+	public DateTimeIterator(DateTime start, DateTimeIncrementer inc) {
 		_active = true;
         _current = new MutableDateTime(start);
 		_incrementer = inc;
@@ -188,7 +188,7 @@ public class DateTimeIterator implements Iterator<IDateTime> {
 	public boolean hasNext() { return _active; }
 
 	@Override
-	public IDateTime next() {
+	public DateTime next() {
         ImmutableDateTime result = new ImmutableDateTime(_current);
 		_incrementer.increment(_current);
 		return result;

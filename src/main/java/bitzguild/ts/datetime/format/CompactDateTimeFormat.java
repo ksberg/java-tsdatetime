@@ -5,7 +5,7 @@ import bitzguild.ts.datetime.*;
 
 import java.text.ParseException;
 
-public class CompactDateTimeFormat implements IDateTimeFormat {
+public class CompactDateTimeFormat implements DateTimeFormat {
 
 
     protected DaysAndMonths _daysAndMonths;
@@ -21,7 +21,7 @@ public class CompactDateTimeFormat implements IDateTimeFormat {
      * DaysAndMonths Constructor. This class makes indirect use of
      * DaysAndMonths, meaning these are not included as part of the
      * parsing and rendering. However, a specialized DaysAndMonths
-     * is useful for IDateTime subclasses that print dayName or monthName.
+     * is useful for DateTime subclasses that print dayName or monthName.
      *
      * @param altDaysAndMonths rendering for days and months
      */
@@ -37,7 +37,7 @@ public class CompactDateTimeFormat implements IDateTimeFormat {
      * @param datetime MutableDateTime receiver
      * @param datetimeString String to parse
      */
-    public IDateTime parseToDateTime(MutableDateTime datetime, String datetimeString) throws ParseException {
+    public DateTime parseToDateTime(MutableDateTime datetime, String datetimeString) throws ParseException {
     	
     	String dateStr = null;
     	String timeStr = null;
@@ -72,7 +72,7 @@ public class CompactDateTimeFormat implements IDateTimeFormat {
     /**
      * Format given date time into buffer
      */
-    public StringBuffer renderToBuffer(IDateTime date, StringBuffer strb) {
+    public StringBuffer renderToBuffer(DateTime date, StringBuffer strb) {
         strb.append(date.year()*10000 + date.month()*100 + date.day());
         strb.append(".");
         int before = strb.length();

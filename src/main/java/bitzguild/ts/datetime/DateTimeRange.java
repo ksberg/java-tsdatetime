@@ -49,7 +49,7 @@ public class DateTimeRange {
 	 * @param dtUpper MutableDateTime
 	 * @return DateTimeRange
 	 */
-	public static DateTimeRange fromTo(IDateTime dtLower, IDateTime dtUpper)    {
+	public static DateTimeRange fromTo(DateTime dtLower, DateTime dtUpper)    {
 		return new DateTimeRange(dtLower,dtUpper);
 	}
 
@@ -71,7 +71,7 @@ public class DateTimeRange {
 	 * @param dtUpper MutableDateTime
 	 * @return DateTimeRange
 	 */
-	public static DateTimeRange fromUpTo(IDateTime dtLower, IDateTime dtUpper)  {
+	public static DateTimeRange fromUpTo(DateTime dtLower, DateTime dtUpper)  {
         MutableDateTime dtTmp = new MutableDateTime(dtUpper);
         dtTmp.addMillis(1);
 		return new DateTimeRange(dtLower,dtTmp);
@@ -127,14 +127,14 @@ public class DateTimeRange {
 	 * @param dtLower MutableDateTime
 	 * @param dtUpper MutableDateTime
 	 */
-	public DateTimeRange(IDateTime dtLower, IDateTime dtUpper) {
+	public DateTimeRange(DateTime dtLower, DateTime dtUpper) {
 		super();
 		_lowerBound = dtLower.rep();
 		_upperBound = dtUpper.rep();
 	}
 
-	public IDateTime lower() { return new MutableDateTime(_lowerBound); }
-	public IDateTime upper() { return new MutableDateTime(_upperBound); }
+	public DateTime lower() { return new MutableDateTime(_lowerBound); }
+	public DateTime upper() { return new MutableDateTime(_upperBound); }
 	
 	public long lowerRep() { return _lowerBound; }
 	public long upperRep() { return _upperBound; }
@@ -289,7 +289,7 @@ public class DateTimeRange {
 	 * @param test MutableDateTime
 	 * @return boolean
 	 */
-	public boolean within(IDateTime test) {
+	public boolean within(DateTime test) {
         return within(test.rep());
 	}
 
@@ -299,7 +299,7 @@ public class DateTimeRange {
 	 * @param test
 	 * @return boolean
 	 */
-	public boolean above(IDateTime test) {
+	public boolean above(DateTime test) {
 		long rep = test.rep();
 		return (rep > this._upperBound);
 	}
@@ -310,7 +310,7 @@ public class DateTimeRange {
 	 * @param test
 	 * @return boolean
 	 */
-	public boolean below(IDateTime test) {
+	public boolean below(DateTime test) {
 		long rep = test.rep();
 		return (rep < this._lowerBound);
 	}

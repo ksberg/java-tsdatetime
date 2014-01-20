@@ -56,7 +56,7 @@ public class Test4DateNames {
 
     @Test
     public void testDefaultNames() {
-        IDateTime d = new ImmutableDateTime(2004,5,6);
+        DateTime d = new ImmutableDateTime(2004,5,6);
         String s = d.toString();
 
         System.out.println("Date = " + d.toString());
@@ -81,8 +81,8 @@ public class Test4DateNames {
 
         assertEquals("Mutable weekOfYear() == Immutable weekOfYear()", dBefore1.weekOfYear(),dBefore2.weekOfYear());
         int before = dBefore1.weekOfYear();
-        IDateTime dAfter1 = dBefore1.addWeeks(1);
-        IDateTime dAfter2 = dBefore2.addWeeks(1);
+        DateTime dAfter1 = dBefore1.addWeeks(1);
+        DateTime dAfter2 = dBefore2.addWeeks(1);
         int after = dAfter1.weekOfYear();
         assertTrue("Sequential Weeks", after == before + 1);
 

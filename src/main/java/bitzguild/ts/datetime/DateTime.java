@@ -35,7 +35,7 @@ import java.util.Date;
 
 /**
  * <p>
- * The IDateTime interface is the central abstraction for BitzGuild DateTime.
+ * The DateTime interface is the central abstraction for BitzGuild DateTime.
  * </p>
  * <p>
  * Class for data and operations on gregorian calendar date. This is a
@@ -69,12 +69,12 @@ import java.util.Date;
  *
  * @see bitzguild.ts.datetime.MutableDateTime
  * @see bitzguild.ts.datetime.ImmutableDateTime
- * @see IDateTimePredicate
+ * @see DateTimePredicate
  *
  * @author Kevin Sven Berg
  */
 
-public interface IDateTime extends IDateTimeNames {
+public interface DateTime extends DateTimeNames {
 
     // unit definitions
     public static final int MILLISECOND = 0;
@@ -99,11 +99,11 @@ public interface IDateTime extends IDateTimeNames {
     
     /**
      * Answer the predicate function which evaluates if given 
-     * IDateTime is a holiday.
+     * DateTime is a holiday.
      * 
-     * @return IDateTimePredicate 
+     * @return DateTimePredicate
      */
-	public IDateTimePredicate holidays();
+	public DateTimePredicate holidays();
     
     /**
      * Answer long representation of given date time, a compact form
@@ -259,28 +259,28 @@ public interface IDateTime extends IDateTimeNames {
 
 
 
-    public IDateTime addMillis(int amount);
+    public DateTime addMillis(int amount);
 
     /**
      *
      * @param amount
      * @return
      */
-    public IDateTime addSeconds(int amount);
+    public DateTime addSeconds(int amount);
 
     /**
      *
      * @param amount
      * @return
      */
-    public IDateTime addMinutes(int amount);
+    public DateTime addMinutes(int amount);
 
     /**
      *
      * @param amount
      * @return
      */
-    public IDateTime addHours(int amount);
+    public DateTime addHours(int amount);
 
 
     /**
@@ -288,7 +288,7 @@ public interface IDateTime extends IDateTimeNames {
      * @param numDays
      * @return
      */
-    public IDateTime addDays(int numDays);
+    public DateTime addDays(int numDays);
 
 
     /**
@@ -296,7 +296,7 @@ public interface IDateTime extends IDateTimeNames {
      * @param numDays
      * @return
      */
-    public IDateTime addBusinessDays(int numDays);
+    public DateTime addBusinessDays(int numDays);
 
 
     /**
@@ -304,7 +304,7 @@ public interface IDateTime extends IDateTimeNames {
      * @param numWeeks
      * @return
      */
-    public IDateTime addWeeks(int numWeeks);
+    public DateTime addWeeks(int numWeeks);
 
 
     /**
@@ -312,7 +312,7 @@ public interface IDateTime extends IDateTimeNames {
      * @param numberOfYears
      * @return
      */
-    public IDateTime addYears(int numberOfYears);
+    public DateTime addYears(int numberOfYears);
 
 
     /**
@@ -320,7 +320,7 @@ public interface IDateTime extends IDateTimeNames {
      * @param dayOfWeek
      * @return
      */
-    public IDateTime rollbackToDayOfWeek(int dayOfWeek);
+    public DateTime rollbackToDayOfWeek(int dayOfWeek);
 
 
     /**
@@ -328,7 +328,7 @@ public interface IDateTime extends IDateTimeNames {
      * @param num
      * @return
      */
-    public IDateTime rollMonths(int num);
+    public DateTime rollMonths(int num);
 
 
     /**
@@ -336,49 +336,49 @@ public interface IDateTime extends IDateTimeNames {
      * @param dayOfWeek
      * @return
      */
-    public IDateTime rollToDayOfWeek(int dayOfWeek);
+    public DateTime rollToDayOfWeek(int dayOfWeek);
 
 
     /**
      *
      * @return
      */
-    public IDateTime nextBusinessDay();
+    public DateTime nextBusinessDay();
 
 
     /**
      *
      * @return
      */
-    public IDateTime nextWeekday();
+    public DateTime nextWeekday();
 
 
     /**
      *
      * @return
      */
-    public IDateTime nextWeek();
+    public DateTime nextWeek();
 
 
     /**
      *
      * @return
      */
-    public IDateTime nextMonth();
+    public DateTime nextMonth();
 
 
     /**
      *
      * @return
      */
-    public IDateTime nextQuarter();
+    public DateTime nextQuarter();
 
 
     /**
      *
      * @return
      */
-    public IDateTime nextYear();
+    public DateTime nextYear();
 
 
     /**
@@ -386,21 +386,21 @@ public interface IDateTime extends IDateTimeNames {
      * @param numYears
      * @return
      */
-    public IDateTime rollYears(int numYears);
+    public DateTime rollYears(int numYears);
 
 
     /**
      *
      * @return
      */
-    public IDateTime priorWeekday();
+    public DateTime priorWeekday();
 
 
     /**
      *
      * @return
      */
-    public IDateTime priorBusinessDay();
+    public DateTime priorBusinessDay();
 
 
     /**
@@ -408,7 +408,7 @@ public interface IDateTime extends IDateTimeNames {
      * @param other
      * @return
      */
-    public double yearsTo(IDateTime other);
+    public double yearsTo(DateTime other);
 
 
     /**

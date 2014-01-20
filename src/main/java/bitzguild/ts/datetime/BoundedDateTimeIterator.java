@@ -53,8 +53,8 @@ public class BoundedDateTimeIterator extends DateTimeIterator {
 	}
 	
 	@Override
-	public IDateTime next() {
-        IDateTime result = super.next();
+	public DateTime next() {
+        DateTime result = super.next();
 		if (_range.above(_current)) terminate();
 		return result;
 	}
