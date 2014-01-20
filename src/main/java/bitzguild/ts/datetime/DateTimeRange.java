@@ -120,18 +120,7 @@ public class DateTimeRange {
 		_upperBound = upper;
 	}
 	
-	/**
-	 * Constructor that takes MutableDateTime parameters
-	 * 
-	 * @param dtLower MutableDateTime
-	 * @param dtUpper MutableDateTime
-	 */
-	public DateTimeRange(MutableDateTime dtLower, MutableDateTime dtUpper) {
-		super();
-		_lowerBound = dtLower.rep();
-		_upperBound = dtUpper.rep();
-	}
-	
+
 	/**
 	 * Constructor that takes MutableDateTime parameters
 	 * 
@@ -143,11 +132,9 @@ public class DateTimeRange {
 		_lowerBound = dtLower.rep();
 		_upperBound = dtUpper.rep();
 	}
-	
-	
-	
-	public MutableDateTime lower() { return new MutableDateTime(_lowerBound); }
-	public MutableDateTime upper() { return new MutableDateTime(_upperBound); }
+
+	public IDateTime lower() { return new MutableDateTime(_lowerBound); }
+	public IDateTime upper() { return new MutableDateTime(_upperBound); }
 	
 	public long lowerRep() { return _lowerBound; }
 	public long upperRep() { return _upperBound; }
@@ -423,9 +410,9 @@ public class DateTimeRange {
 	 * @return StringBuffer
 	 */
 	public StringBuffer toBuffer(StringBuffer strb) {
-		lower().toBuffer(strb);
+        (new MutableDateTime(_lowerBound)).toBuffer(strb);
 		strb.append(" to ");
-		upper().toBuffer(strb);
+        (new MutableDateTime(_upperBound)).toBuffer(strb);
 		return strb;
 	}
 	

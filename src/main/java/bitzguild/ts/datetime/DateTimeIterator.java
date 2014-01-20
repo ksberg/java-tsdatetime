@@ -160,8 +160,9 @@ public class DateTimeIterator implements Iterator<IDateTime> {
 	 * @param start MutableDateTime
 	 * @param inc incrementer function
 	 */
-	public DateTimeIterator(MutableDateTime start, DateTimeIncrementer inc) {
+	public DateTimeIterator(IDateTime start, DateTimeIncrementer inc) {
 		_active = true;
+        _current = new MutableDateTime(start);
 		_incrementer = inc;
 	}
 
@@ -188,7 +189,7 @@ public class DateTimeIterator implements Iterator<IDateTime> {
 
 	@Override
 	public IDateTime next() {
-		MutableDateTime result = new MutableDateTime(_current);
+        ImmutableDateTime result = new ImmutableDateTime(_current);
 		_incrementer.increment(_current);
 		return result;
 	}
