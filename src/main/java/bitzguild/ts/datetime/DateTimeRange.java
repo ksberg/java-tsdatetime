@@ -391,11 +391,11 @@ public class DateTimeRange {
      * @param amount
      * @return DateTimeRange
      */
-    public DateTimeRange addBusinessDays(int amount) {
+    public DateTimeRange addBusinessDays(int amount, DateTimePredicate holidays) {
     	MutableDateTime dtA = new MutableDateTime(this._lowerBound);
     	MutableDateTime dtZ = new MutableDateTime(this._upperBound);
-    	dtA.addBusinessDays(amount);
-    	dtZ.addBusinessDays(amount);
+    	dtA.addBusinessDays(amount, holidays);
+    	dtZ.addBusinessDays(amount, holidays);
     	return new DateTimeRange(dtA,dtZ);
     }
     

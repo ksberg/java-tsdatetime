@@ -33,6 +33,8 @@ package bitzguild.ts.datetime;
 import bitzguild.ts.datetime.format.DaysAndMonthsForEnglish;
 import bitzguild.ts.datetime.format.CompactDateTimeFormat;
 
+import java.util.ArrayList;
+
 /**
  * <p>
  * Class for data and operations on gregorian calendar date. This is a
@@ -119,7 +121,7 @@ public abstract class AbstractDateTime extends DateUtil implements DateTime, jav
     protected int 	_year;          // Gregorian Year, e.g. 1945
 	protected int 	_dayOfYear;     // Day Of Year with January 1st = 1
     protected int	_time;			// milliseconds since midnight
-	protected DateTimePredicate _holidays = DefaultHolidays;
+//	protected DateTimePredicate _holidays = DefaultHolidays;
 
 	// --------------------------------------------
 	// Existence
@@ -129,8 +131,9 @@ public abstract class AbstractDateTime extends DateUtil implements DateTime, jav
      * Default Constructor - not public
 	 */
 	protected AbstractDateTime() {
+        _year = 1970;
+        _dayOfYear = 1;
         _time = 0;
-        _holidays = DefaultHolidays;
 	}
 
 	/**
@@ -140,14 +143,12 @@ public abstract class AbstractDateTime extends DateUtil implements DateTime, jav
 	 */
 	protected AbstractDateTime(long rep) {
 		_setRep(rep);
-        _holidays = DefaultHolidays;
 	}
 	
 	protected AbstractDateTime(DateTime other) {
 		_year = other.year();
 		_dayOfYear = other.dayOfYear();
 		_time = other.millisecondsSinceMidnight();
-		_holidays = other.holidays();
 	}
 	
     /**
@@ -161,7 +162,6 @@ public abstract class AbstractDateTime extends DateUtil implements DateTime, jav
         _year = year;
         _dayOfYear = dayOfYear;
         _time = 0;
-        _holidays = holidays;
     }
 
 	/**
@@ -180,7 +180,6 @@ public abstract class AbstractDateTime extends DateUtil implements DateTime, jav
 		super();
 		_setYearAndDayCount(yearInteger, dayCount);
         _time = 0;
-        _holidays = DefaultHolidays;
 	}
 	
 	
@@ -200,7 +199,6 @@ public abstract class AbstractDateTime extends DateUtil implements DateTime, jav
 		super();
 		_setFromYearMonthDay(theYear, theMonth, theDay);
         _time = 0;
-        _holidays = DefaultHolidays;
 	}
 
 
@@ -247,7 +245,6 @@ public abstract class AbstractDateTime extends DateUtil implements DateTime, jav
 	 */
 	public boolean equals(Object o) {
 		if (!(o instanceof DateTime)) return false;
-		if (_holidays != ((DateTime)o).holidays()) return false;
 		return compareTo((DateTime)o) == 0;
 	}
 
@@ -298,14 +295,6 @@ public abstract class AbstractDateTime extends DateUtil implements DateTime, jav
     // ------------------------------------------------------------------------------------
 
 
-    /**
-     * Answer predicate function that indicates holidays.
-     *
-     * @return DateTimePredicate
-     */
-    public DateTimePredicate holidays() {
-        return _holidays;
-    }
 
     public long rep() {
         long dserial = (long)((_year << 9) | _dayOfYear);
@@ -422,16 +411,6 @@ public abstract class AbstractDateTime extends DateUtil implements DateTime, jav
 					+ (yearIndex / 400) - (yearIndex / 100)) % 7;
 	}
 
-	/**
-	 * <p>
-	 * Answer the business day of the month.
-	 * This counts consecutive business days
-	 * since the start of the month.
-	 * </p>
-	 * @return int BDOM
-	 */
-    public abstract int businessDayOfMonth();
-
     /**
      * Answer the dayOfYear number in year (1 ... 366 max)
      *
@@ -476,9 +455,6 @@ public abstract class AbstractDateTime extends DateUtil implements DateTime, jav
         return (_dayOfYear / 7) + 1;
     }
 
-    public DateTimePredicate getHolidays() {
-		return _holidays;
-	}
 
     // ------------------------------------------------------------------------------------
     // Names
@@ -523,10 +499,9 @@ public abstract class AbstractDateTime extends DateUtil implements DateTime, jav
     }
 
 
-
-    // -----------------------------------------------------------
+    // ------------------------------------------------------------------------------------
     // XXX
-    // -----------------------------------------------------------
+    // ------------------------------------------------------------------------------------
 
 	protected int leap() { return leapYearBalance(_year); }
 
@@ -656,7 +631,7 @@ public abstract class AbstractDateTime extends DateUtil implements DateTime, jav
      * Increment or decrement by the given milliseconds
      *
      * @param amount milliseconds
-     * @return MutableDateTime
+     * @return DateTime
      */
     public DateTime addMillis(int amount) {
         return addDays(_addMillisWithBalance(amount));
@@ -721,25 +696,6 @@ public abstract class AbstractDateTime extends DateUtil implements DateTime, jav
 		return this;
 	}
 
-	/**
-	 * <p>
-	 * Adds or subtracts the number of business days to
-	 * the given date. Wraps month and year as appropriate.
-	 * </p>
-	 *
-	 * @param numDays numDays
-	 * @return Date instance
-	 */
-	public DateTime addBusinessDays(int numDays) {
-		if (numDays > 0) {
-			while(numDays-- > 0)
-				nextBusinessDay();
-		} else if (numDays < 0) {
-			while(numDays++ < 0)
-				priorBusinessDay();
-		}
-		return this;
-	}
 
 
 	/**
@@ -874,29 +830,11 @@ public abstract class AbstractDateTime extends DateUtil implements DateTime, jav
 		return this;
 	}
 
-	public DateTime nextBusinessDay() {
-		nextWeekday();
-		while(isHoliday()) {
-			nextWeekday();
-		}
-        _time = 0;
-		return this;
-	}
-
 	public DateTime nextWeekday() {
 		addDays(1);
 		int dayOfWeek = dayOfWeek();
 		if(dayOfWeek > 4) {
 			addDays(7 - dayOfWeek);
-		}
-        _time = 0;
-		return this;
-	}
-
-	public DateTime priorBusinessDay() {
-		priorWeekday();
-		while(isHoliday()) {
-			priorWeekday();
 		}
         _time = 0;
 		return this;
@@ -956,11 +894,334 @@ public abstract class AbstractDateTime extends DateUtil implements DateTime, jav
 		return this;
 	}
 
-
-
     // -----------------------------------------------------------
+    // Bounding Ranges
+    // -----------------------------------------------------------
+
+    /**
+     * Answer _year spanning range that includes current datetime
+     *
+     * @return DateTimeRange
+     */
+    public DateTimeRange boundsForYear() {
+        MutableDateTime dtA = new MutableDateTime(year(),1,1);
+        MutableDateTime dtZ = new MutableDateTime(dtA);
+        dtZ.rollYears(1);
+        dtZ.addMillis(-1);
+        return new DateTimeRange(dtA,dtZ);
+    }
+
+
+    /**
+     * Answer month spanning range that includes current datetime
+     *
+     * @return DateTimeRange
+     */
+    public DateTimeRange boundsForMonth() {
+        MutableDateTime dtA = new MutableDateTime(year(),month(),1);
+        MutableDateTime dtZ = new MutableDateTime(dtA);
+        dtZ.nextMonth();
+        dtZ.addMillis(-1);
+        return new DateTimeRange(dtA,dtZ);
+    }
+
+    /**
+     * Answer week spanning range that includes current datetime
+     *
+     * @return DateTimeRange
+     */
+    public DateTimeRange boundsForWeek() {
+        MutableDateTime dtA = new MutableDateTime(this);
+        dtA.priorWeekday();
+        dtA.addWeeks(-1);
+        dtA.nextWeek();
+        MutableDateTime dtZ = new MutableDateTime(dtA);
+        dtZ.nextWeek();
+        dtZ.addMillis(-1);
+        return new DateTimeRange(dtA,dtZ);
+    }
+
+    /**
+     * Answer _dayOfYear spanning range that includes current ImmutableDateTime
+     *
+     * @return DateTimeRange
+     */
+    public DateTimeRange boundsForDay() {
+        MutableDateTime dtA = new MutableDateTime(this);
+        dtA.setHoursMinutesSecondsMillis(0, 0, 0, 0);
+        MutableDateTime dtZ = new MutableDateTime(dtA);
+        dtZ._time = MillisInDay - 1;
+        return new DateTimeRange(dtA,dtZ);
+    }
+
+    /**
+     * Answer hour/minute on given _dayOfYear spanning range that includes current ImmutableDateTime.
+     * This is useful for pinning business hours between 9:00 AM and 4:30 PM, for example.
+     *
+     * @return DateTimeRange
+     */
+    public DateTimeRange boundsForDayHours(int startHours, int startMinutes, int endHours, int endMinutes) {
+        MutableDateTime dtA = new MutableDateTime(this);
+        dtA.setHoursMinutesSecondsMillis(startHours, startMinutes, 0, 0);
+        MutableDateTime dtZ = new MutableDateTime(dtA);
+        dtA.setHoursMinutesSecondsMillis(endHours, endMinutes, 0, 0);
+        return new DateTimeRange(dtA,dtZ);
+    }
+
+
+    // ------------------------------------------------------------------------------------
+    // DateTimeBusiness interface & support
+    // ------------------------------------------------------------------------------------
+
+    /**
+     * <p>
+     * Answer the business day of the month.
+     * This counts consecutive business days
+     * since the start of the month.
+     * </p>
+     * @return int BDOM
+     */
+    public int businessDayOfMonth(DateTimePredicate holidays) {
+        MutableDateTime date = new MutableDateTime(this);
+
+        int bizDOM = 0;
+        int month = date.month();
+        while(month == date.month()) {
+            date.priorBusinessDay(holidays);
+            bizDOM++;
+        }
+        return bizDOM;
+    }
+
+
+    /**
+     * <p>
+     * Adds or subtracts the number of business days to
+     * the given date. Wraps month and year as appropriate.
+     * </p>
+     *
+     * @param numDays numDays
+     * @return Date instance
+     */
+    public DateTime addBusinessDays(int numDays, DateTimePredicate holidays) {
+        if (numDays > 0) {
+            while(numDays-- > 0)
+                nextBusinessDay(holidays);
+        } else if (numDays < 0) {
+            while(numDays++ < 0)
+                priorBusinessDay(holidays);
+        }
+        return this;
+    }
+
+    public DateTime nextBusinessDay(DateTimePredicate holidays) {
+        nextWeekday();
+        while(holidays.apply(this)) {
+            nextWeekday();
+        }
+        _time = 0;
+        return this;
+    }
+
+    public DateTime priorBusinessDay(DateTimePredicate holidays) {
+        priorWeekday();
+        while(holidays.apply(this)) {
+            priorWeekday();
+        }
+        _time = 0;
+        return this;
+    }
+
+    /**
+     * Answer a generator that will iterate over business days in given month.
+     *
+     * @return DateTimeGenerator
+     */
+    public DateTimeIterator businessDaysInMonth(DateTimePredicate holidays) {
+        return new BoundedDateTimeIterator(boundsForMonth(), DateTimeIterator.businessDays(holidays));
+    }
+
+
+    /**
+     * Answer generator for business days in this month up until given datetime
+     * @param before DateTime
+     * @return DateTimeGenerator
+     */
+    public DateTimeIterator businessDaysInMonthBefore(DateTime before, DateTimePredicate holidays) {
+        DateTimeRange range = boundsForMonth();
+        range = new DateTimeRange(range.lower(), before);
+        return new BoundedDateTimeIterator(range, DateTimeIterator.businessDays(holidays));
+    }
+
+    /**
+     * Answer generator for business days left until given datetime
+     * @param before DateTime
+     * @return DateTimeGenerator
+     */
+    public DateTimeIterator businessDaysBefore(DateTime before, DateTimePredicate holidays) {
+        DateTimeRange range = new DateTimeRange(this, before);
+        return new BoundedDateTimeIterator(range, DateTimeIterator.businessDays(holidays));
+    }
+
+    /**
+     *
+     * @param before
+     * @param nth
+     * @param weekdayIndex
+     * @param holidays
+     * @return
+     */
+    public DateTimeIterator businessDaysBeforeNthWeekday(DateTime before, int nth, int weekdayIndex, DateTimePredicate holidays) {
+        DateTimeRange range = new DateTimeRange(this, before);
+        return new BoundedDateTimeIterator(range, DateTimeIterator.businessDays(holidays));
+    }
+
+    /**
+     * Answer the nth business _dayOfYear of the month. Appears in Futures first
+     * notice _dayOfYear (FND).
+     * <p>Examples</p>
+     * <ul>
+     *     <li>1st business _dayOfYear of contract month (Paladium, Platinum)</li>
+     * </ul>
+     *
+     * @param n occurrence
+     * @return DateTime
+     */
+    public DateTime nthBusinessDayOfMonth(int n, DateTimePredicate holidays) {
+        DateTimeIterator bizdays = businessDaysInMonth(holidays);
+        int target = 0;
+        DateTime dt = null;
+        while(bizdays.hasNext()) {
+            target++;
+            dt = bizdays.next();
+            if (target == n) return dt;
+        }
+        return dt;
+    }
+
+
+    /**
+     * Answer the nth occurrence of a given weekday in the month. Legal examples
+     * include the 3rd Thursday, 2nd Wednesday, 4th Saturday, 1st Sunday, etc.
+     * Result will be null if either dayOfWeek or n is out of range.
+     *
+     * @param nth repetition of given _dayOfYear-of-week (0,1,2,3...)
+     * @param dayOfWeek day-of-week (0..6)
+     * @return DateTime
+     */
+    public DateTime nthWeekdayOfMonth(int nth, int dayOfWeek, DateTimePredicate holidays) {
+        if (dayOfWeek > 6) return null;
+        return nthWeekdayHelper(nth,dayOfWeek,false, holidays);
+    }
+
+    /**
+     * Answer the nth occurrence of a given business weekday. Business days
+     * exclude _holidays.
+     *
+     * @param nth (0,1,2...) occurrence
+     * @param dayOfWeek (0..6) starting on Monday
+     * @return DateTime
+     */
+    public DateTime nthBusinessWeekdayOfMonth(int nth, int dayOfWeek, DateTimePredicate holidays) {
+        if (dayOfWeek > 4) return null;
+        return nthWeekdayHelper(nth,dayOfWeek,true, holidays);
+    }
+
+    /**
+     * Common algorithms between nthWeekdayOfMonth & nthBusinessWeekdayOfMonth
+     *
+     * @param nth (0,1,2...) occurrence
+     * @param dayOfWeek (0..6) starting on Monday
+     * @param checkHolidays boolean
+     * @return DateTime
+     */
+    private DateTime nthWeekdayHelper(int nth, int dayOfWeek, boolean checkHolidays, DateTimePredicate holidays) {
+        if (nth < 1) return null;
+        if (dayOfWeek < 0) return null;
+
+        int month = this.month();
+        MutableDateTime dt = MutableDateTime.yearMonthDay(year(), month, 1);
+        dt.rollToDayOfWeek(dayOfWeek);
+        int count = 0;
+        while(count < nth && dt.month() == month) {
+            dt.addDays(7);
+            if (checkHolidays && holidays.apply(dt)) dt.addDays(7);
+            count++;
+        }
+        return (dt.month() == month) ? _withInstance(dt) : null;
+    }
+
+    /**
+     * Answer the nth last business _dayOfYear counting backward in the month. This
+     * measure frequently appears for contract expiration in Futures and Options.
+     * <p>Examples</p>
+     * <ul>
+     *     <li>last business _dayOfYear of prior month (Bonds)</li>
+     *     <li>2nd last business _dayOfYear of month preceding contract month (Metals)</li>
+     *     <li>5th last business _dayOfYear of month prior to contract month (Cotton)</li>
+     *     <li>7th last business _dayOfYear of month prior to contract month (Coffee)</li>
+     *     <li>10th last business _dayOfYear of month prior to contract month (Cocoa)</li>
+     * </ul>
+     *
+     * @param nth last nth index (0..N counting from last _dayOfYear)
+     * @return DateTime
+     */
+    public DateTime lastNthBusinessDayOfMonth(int nth, DateTimePredicate holidays) {
+        return lastNthBusinessDayOfMonthBefore(nth, null, holidays);
+    }
+
+    /**
+     * Answer the nth last business _dayOfYear counting backward in the month.
+     * This
+     * measure frequently appears for contract expiration in Futures and Options.
+     * <p>Examples</p>
+     * <ul>
+     *     <li>XXX (Bonds)</li>
+     * </ul>
+     *
+     * @param nth last nth index (0..N counting from last _dayOfYear)
+     * @return DateTime
+     */
+    public DateTime lastNthBusinessDayOfMonthBefore(int nth, DateTime before, DateTimePredicate holidays) {
+        DateTimeIterator gen = (before != null) ? businessDaysInMonthBefore(before, holidays) : businessDaysInMonth(holidays);
+        ArrayList<DateTime> days = new ArrayList<>();
+        while(gen.hasNext()) days.add(gen.next());
+        int size = days.size();
+        if (nth >= size) return null;
+        return _withInstance(days.get(size-nth-1));
+    }
+
+
+    /**
+     * This measure appears for last trading _dayOfYear (expiration) for Futures and Options.
+     *
+     * <p>Examples</p>
+     * <ul>
+     *     <li>2nd business _dayOfYear preceding 3rd wednesday of contract month (Currencies)</li>
+     * </ul>
+     * @param nth
+     * @param ith
+     * @param wkday
+     * @return
+     */
+    public DateTime lastNthBusinessDayOfMonthBeforeIthWeekday(int nth, int ith, int wkday, DateTimePredicate holidays) {
+        DateTime dt = nthBusinessWeekdayOfMonth(ith,wkday, holidays);
+        if (dt == null) return null;
+        DateTimeIterator gen = this.businessDaysBefore(dt, holidays);
+        ArrayList<DateTime> days = new ArrayList<>();
+        while(gen.hasNext()) days.add(gen.next());
+        int size = days.size();
+        if (nth >= size) return null;
+        return _withInstance(days.get(size-nth-1));
+    }
+
+    protected DateTime _withInstance(DateTime dt) {
+        return dt;
+    }
+
+    // ------------------------------------------------------------------------------------
 	// Query methods
-    // -----------------------------------------------------------
+    // ------------------------------------------------------------------------------------
 
 
     /**
@@ -990,32 +1251,14 @@ public abstract class AbstractDateTime extends DateUtil implements DateTime, jav
 	 * @see DateTimePredicate Creating holiday functions <br>
 	 */
 	public boolean isHoliday() {
-        return _holidays.apply(this);
+        return DefaultHolidays.apply(this);
 	}
 
-    // -----------------------------------------------------------
-    // Bounding Ranges
-    // -----------------------------------------------------------
-
-    /**
-     * Answer _year spanning range that includes current ImmutableDateTime
-     *
-     * @return DateTimeRange
-     */
-    public DateTimeRange boundsForYear() {
-        MutableDateTime dtA = new MutableDateTime(this);
-        int iyr = dtA.year();
-        dtA._setFromYearMonthDay(iyr, 1, 1);
-        MutableDateTime dtZ = new MutableDateTime(dtA);
-        dtZ.rollYears(1);
-        dtZ.addDays(-1);
-        return new DateTimeRange(dtA,dtZ);
-    }
 
 
-	// -----------------------------------------------------------
+    // ------------------------------------------------------------------------------------
 	// Conversion methods
-	// -----------------------------------------------------------
+    // ------------------------------------------------------------------------------------
 
 	/**
 	 * Answers an integer equivalent from YMD (March 17th 1964 becomes 19640317).
@@ -1053,16 +1296,27 @@ public abstract class AbstractDateTime extends DateUtil implements DateTime, jav
 		return calendar.getTime();
 	}
 
-    // -----------------------------------------------------------
+    // ------------------------------------------------------------------------------------
 	// Format methods
-    // -----------------------------------------------------------
+    // ------------------------------------------------------------------------------------
+
+
+    /**
+     *
+     * @param strb
+     * @param format
+     * @return
+     */
+    public StringBuffer toBuffer(StringBuffer strb, DateTimeFormat format) {
+        return format.renderToBuffer(this, strb);
+    }
 
 
 	/**
 	 * Efficient alternative for toString().
 	 */
 	public StringBuffer toBuffer(StringBuffer strb) {
-        return DefaultParserRenderer.renderToBuffer(this,strb);
+        return toBuffer(strb, DefaultParserRenderer);
 	}
 
 	/**

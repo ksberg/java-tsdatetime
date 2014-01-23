@@ -230,6 +230,16 @@ public class ImmutableDateTime extends AbstractDateTime implements java.io.Seria
         return new ImmutableDateTime(iyear,monthIndex,dayIndex, hour, minute, second, 0);
     }
 
+    /**
+     * Answer Copy (or not) of given datetime
+     *
+     * @param dt AbstractDateTime
+     * @return DateTime as ImmutableDateTime
+     */
+    protected DateTime _withInstance(DateTime dt) {
+        return new ImmutableDateTime(dt);
+    }
+
     // --------------------------------------------------------
     // Predicates
     // --------------------------------------------------------
@@ -248,26 +258,6 @@ public class ImmutableDateTime extends AbstractDateTime implements java.io.Seria
     // ------------------------------------------------------------------------------------
 
 
-
-	/**
-	 * <p>
-	 * Answer the business day of the month.
-	 * This counts consecutive business days
-	 * since the start of the month.
-	 * </p>
-	 * @return int BDOM
-	 */
-	public int businessDayOfMonth() {
-        MutableDateTime date = new MutableDateTime(this);
-
-		int bizDOM = 0;
-		int month = date.month();
-		while(month == date.month()) {
-			date.priorBusinessDay();
-			bizDOM++;
-		}
-		return bizDOM;
-	}
 
     /**
      * Answer the dayOfYear number in year (1 ... 366 max)
@@ -350,67 +340,67 @@ public class ImmutableDateTime extends AbstractDateTime implements java.io.Seria
 
 
     public DateTime addDays(int numDays) {
-        return new ImmutableDateTime(((new MutableDateTime(this)).addDays(numDays)).intRep());
+        return new ImmutableDateTime(((new MutableDateTime(this)).addDays(numDays)).rep());
     }
 
-    public DateTime addBusinessDays(int numDays) {
-        return new ImmutableDateTime(((new MutableDateTime(this)).addBusinessDays(numDays)).intRep());
+    public DateTime addBusinessDays(int numDays, DateTimePredicate holidays) {
+        return new ImmutableDateTime(((new MutableDateTime(this)).addBusinessDays(numDays, holidays)).rep());
     }
 
     public DateTime addWeeks(int numWeeks) {
-        return new ImmutableDateTime(((new MutableDateTime(this)).addWeeks(numWeeks)).intRep());
+        return new ImmutableDateTime(((new MutableDateTime(this)).addWeeks(numWeeks)).rep());
     }
 
     public DateTime addYears(int numberOfYears) {
-        return new ImmutableDateTime(((new MutableDateTime(this)).addYears(numberOfYears)).intRep());
+        return new ImmutableDateTime(((new MutableDateTime(this)).addYears(numberOfYears)).rep());
     }
 
     public DateTime rollbackToDayOfWeek(int dayOfWeek) {
-        return new ImmutableDateTime(((new MutableDateTime(this)).rollbackToDayOfWeek(dayOfWeek)).intRep());
+        return new ImmutableDateTime(((new MutableDateTime(this)).rollbackToDayOfWeek(dayOfWeek)).rep());
     }
 
     public DateTime rollMonths(int num) {
-        return new ImmutableDateTime(((new MutableDateTime(this)).rollMonths(num)).intRep());
+        return new ImmutableDateTime(((new MutableDateTime(this)).rollMonths(num)).rep());
     }
 
     public DateTime rollToDayOfWeek(int dayOfWeek) {
-        return new ImmutableDateTime(((new MutableDateTime(this)).rollToDayOfWeek(dayOfWeek)).intRep());
+        return new ImmutableDateTime(((new MutableDateTime(this)).rollToDayOfWeek(dayOfWeek)).rep());
     }
 
-    public DateTime nextBusinessDay() {
-        return new ImmutableDateTime(((new MutableDateTime(this)).nextBusinessDay()).intRep());
+    public DateTime nextBusinessDay(DateTimePredicate holidays) {
+        return new ImmutableDateTime(((new MutableDateTime(this)).nextBusinessDay(holidays)).rep());
     }
 
     public DateTime nextWeekday() {
-        return new ImmutableDateTime(((new MutableDateTime(this)).nextWeekday()).intRep());
+        return new ImmutableDateTime(((new MutableDateTime(this)).nextWeekday()).rep());
     }
 
     public DateTime nextWeek() {
-        return new ImmutableDateTime(((new MutableDateTime(this)).nextWeek()).intRep());
+        return new ImmutableDateTime(((new MutableDateTime(this)).nextWeek()).rep());
     }
 
     public DateTime nextMonth() {
-        return new ImmutableDateTime(((new MutableDateTime(this)).nextMonth()).intRep());
+        return new ImmutableDateTime(((new MutableDateTime(this)).nextMonth()).rep());
     }
 
     public DateTime nextQuarter() {
-        return new ImmutableDateTime(((new MutableDateTime(this)).nextQuarter()).intRep());
+        return new ImmutableDateTime(((new MutableDateTime(this)).nextQuarter()).rep());
     }
 
     public DateTime nextYear() {
-        return new ImmutableDateTime(((new MutableDateTime(this)).nextYear()).intRep());
+        return new ImmutableDateTime(((new MutableDateTime(this)).nextYear()).rep());
     }
 
     public DateTime rollYears(int numYears) {
-        return new ImmutableDateTime(((new MutableDateTime(this)).rollYears(numYears)).intRep());
+        return new ImmutableDateTime(((new MutableDateTime(this)).rollYears(numYears)).rep());
     }
 
     public DateTime priorWeekday() {
-        return new ImmutableDateTime(((new MutableDateTime(this)).priorWeekday()).intRep());
+        return new ImmutableDateTime(((new MutableDateTime(this)).priorWeekday()).rep());
     }
 
-    public DateTime priorBusinessDay() {
-        return new ImmutableDateTime(((new MutableDateTime(this)).priorBusinessDay()).intRep());
+    public DateTime priorBusinessDay(DateTimePredicate holidays) {
+        return new ImmutableDateTime(((new MutableDateTime(this)).priorBusinessDay(holidays)).rep());
     }
 
 

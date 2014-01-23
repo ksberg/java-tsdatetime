@@ -686,7 +686,7 @@ public class Perf4DateTime {
 
         nsA = System.nanoTime();
         for(int i=0; i<iterations; i++) {
-            pscDT.addBusinessDays(1);
+            pscDT.addBusinessDays(1, MutableDateTime.DefaultHolidays);
         }
         nsZ = System.nanoTime();
         long nsIterPsc = nsZ - nsA;

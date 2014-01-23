@@ -222,7 +222,16 @@ public class MutableDateTime extends AbstractDateTime implements java.io.Seriali
         return new MutableDateTime(iyear,monthIndex,dayIndex, hour, minute, second, 0);
     }
 
-    
+    /**
+     * Answer Copy (or not) of given datetime
+     *
+     * @param dt AbstractDateTime
+     * @return DateTime as ImmutableDateTime
+     */
+    protected DateTime _withInstance(DateTime dt) {
+        return dt;
+    }
+
 
     // --------------------------------------------------------
     // Predicates
@@ -370,24 +379,6 @@ public class MutableDateTime extends AbstractDateTime implements java.io.Seriali
     }
 
 
-    /**
-     * Set the _holidays function for this date only.
-     * The Holiday function is a DateTimePredicate that
-     * returns true if the given date is considered
-     * a holiday. The Date object supports pluggable
-     * _holidays at either class and instance levels.
-     *
-     * @param holidayz holiday function
-     *
-     * @see AbstractDateTime#setDefaultHolidays Holiday Default
-     * @see DateTimePredicate
-     * @see AbstractDateTime#nextBusinessDay Business Day
-     * @see AbstractDateTime#isHoliday Holiday Query
-     */
-    public void setHolidays(DateTimePredicate holidayz) {
-        _holidays = holidayz;
-    }
-
 
     // -----------------------------------------------------------
 	// Instance Methods - Effectors
@@ -404,286 +395,18 @@ public class MutableDateTime extends AbstractDateTime implements java.io.Seriali
 		return this;
 	}
 
-    /**
-     * <p>
-     * Answer the business day of the month.
-     * This counts consecutive business days
-     * since the start of the month.
-     * </p>
-     * @return int BDOM
-     */
-    public int businessDayOfMonth() {
-        MutableDateTime date = new MutableDateTime(this.intRep());
-
-        int bizDOM = 0;
-        int month = date.month();
-        while(month == date.month()) {
-            date.priorBusinessDay();
-            bizDOM++;
-        }
-        return bizDOM;
-    }
-
-    // -----------------------------------------------------------
-    // Bounding Ranges
-    // -----------------------------------------------------------
-
-    /**
-     * Answer _year spanning range that includes current datetime
-     *
-     * @return DateTimeRange
-     */
-    public DateTimeRange boundsForYear() {
-        MutableDateTime dtA = new MutableDateTime(year(),1,1);
-        MutableDateTime dtZ = new MutableDateTime(dtA);
-        dtZ.rollYears(1);
-        dtZ.addMillis(-1);
-        return new DateTimeRange(dtA,dtZ);
-    }
-
-
-    /**
-     * Answer month spanning range that includes current datetime
-     *
-     * @return DateTimeRange
-     */
-    public DateTimeRange boundsForMonth() {
-        MutableDateTime dtA = new MutableDateTime(year(),month(),1);
-        MutableDateTime dtZ = new MutableDateTime(dtA);
-        dtZ.nextMonth();
-        dtZ.addMillis(-1);
-        return new DateTimeRange(dtA,dtZ);
-    }
-
-    /**
-     * Answer week spanning range that includes current datetime
-     *
-     * @return DateTimeRange
-     */
-    public DateTimeRange boundsForWeek() {
-        MutableDateTime dtA = new MutableDateTime(this);
-        dtA.priorWeekday();
-        dtA.addWeeks(-1);
-        dtA.nextWeek();
-        MutableDateTime dtZ = new MutableDateTime(dtA);
-        dtZ.nextWeek();
-        dtZ.addMillis(-1);
-        return new DateTimeRange(dtA,dtZ);
-    }
-
-    /**
-     * Answer _dayOfYear spanning range that includes current ImmutableDateTime
-     *
-     * @return DateTimeRange
-     */
-    public DateTimeRange boundsForDay() {
-        MutableDateTime dtA = new MutableDateTime(this);
-        dtA.setHoursMinutesSecondsMillis(0, 0, 0, 0);
-        MutableDateTime dtZ = new MutableDateTime(dtA);
-        dtZ._time = MillisInDay - 1;
-        return new DateTimeRange(dtA,dtZ);
-    }
-
-    /**
-     * Answer hour/minute on given _dayOfYear spanning range that includes current ImmutableDateTime.
-     * This is useful for pinning business hours between 9:00 AM and 4:30 PM, for example.
-     *
-     * @return DateTimeRange
-     */
-    public DateTimeRange boundsForDayHours(int startHours, int startMinutes, int endHours, int endMinutes) {
-        MutableDateTime dtA = new MutableDateTime(this);
-        dtA.setHoursMinutesSecondsMillis(startHours, startMinutes, 0, 0);
-        MutableDateTime dtZ = new MutableDateTime(dtA);
-        dtA.setHoursMinutesSecondsMillis(endHours, endMinutes, 0, 0);
-        return new DateTimeRange(dtA,dtZ);
-    }
-
     // -----------------------------------------------------------------
     // Generation Methods
     // -----------------------------------------------------------------
 
 
 
-    /**
-     * Answer a generator that will iterate over business days in given month.
-     *
-     * @return DateTimeGenerator
-     */
-    public DateTimeIterator businessDaysInMonth() {
-        return new BoundedDateTimeIterator(boundsForMonth(), DateTimeIterator.businessDay());
-    }
-
-
-    /**
-     * Answer generator for business days in this month up until given datetime
-     * @param before MutableDateTime
-     * @return DateTimeGenerator
-     */
-    public DateTimeIterator businessDaysInMonthBefore(DateTime before) {
-        DateTimeRange range = boundsForMonth();
-        range = new DateTimeRange(range.lower(), before);
-        return new BoundedDateTimeIterator(range, DateTimeIterator.businessDay());
-    }
-
-    /**
-     * Answer generator for business days left until given datetime
-     * @param before MutableDateTime
-     * @return DateTimeGenerator
-     */
-    public DateTimeIterator businessDaysBefore(DateTime before) {
-        DateTimeRange range = new DateTimeRange(this, before);
-        return new BoundedDateTimeIterator(range, DateTimeIterator.businessDay());
-    }
-
-    public DateTimeIterator businessDaysBeforeNthWeekday(DateTime before, int nth, int weekdayIndex) {
-        DateTimeRange range = new DateTimeRange(this, before);
-        return new BoundedDateTimeIterator(range, DateTimeIterator.businessDay());
-    }
 
 
     // -----------------------------------------------------------------
     // Specific Relative Days
     // -----------------------------------------------------------------
 
-
-    /**
-     * Answer the nth business _dayOfYear of the month. Appears in Futures first
-     * notice _dayOfYear (FND).
-     * <p>Examples</p>
-     * <ul>
-     *     <li>1st business _dayOfYear of contract month (Paladium, Platinum)</li>
-     * </ul>
-     *
-     * @param n occurrence
-     * @return MutableDateTime
-     */
-    public DateTime nthBusinessDayOfMonth(int n) {
-        DateTimeIterator bizdays = businessDaysInMonth();
-        int target = 0;
-        DateTime dt = null;
-        while(bizdays.hasNext()) {
-            target++;
-            dt = bizdays.next();
-            if (target == n) return dt;
-        }
-        return dt;
-    }
-
-
-    /**
-     * Answer the nth occurrence of a given weekday in the month. Legal examples
-     * include the 3rd Thursday, 2nd Wednesday, 4th Saturday, 1st Sunday, etc.
-     * Result will be null if either dayOfWeek or n is out of range.
-     *
-     * @param nth repetition of given _dayOfYear-of-week (0,1,2,3...)
-     * @param dayOfWeek day-of-week (0..6)
-     * @return MutableDateTime
-     */
-    public DateTime nthWeekdayOfMonth(int nth, int dayOfWeek) {
-        if (dayOfWeek > 6) return null;
-        return nthWeekdayHelper(nth,dayOfWeek,false);
-    }
-
-    /**
-     * Answer the nth occurrence of a given business weekday. Business days
-     * exclude _holidays.
-     *
-     * @param nth (0,1,2...) occurrence
-     * @param dayOfWeek (0..6) starting on Monday
-     * @return MutableDateTime
-     */
-    public DateTime nthBusinessWeekdayOfMonth(int nth, int dayOfWeek) {
-        if (dayOfWeek > 4) return null;
-        return nthWeekdayHelper(nth,dayOfWeek,true);
-    }
-
-    /**
-     * Common algorithms between nthWeekdayOfMonth & nthBusinessWeekdayOfMonth
-     *
-     * @param nth (0,1,2...) occurrence
-     * @param dayOfWeek (0..6) starting on Monday
-     * @param checkHolidays boolean
-     * @return MutableDateTime
-     */
-    private DateTime nthWeekdayHelper(int nth, int dayOfWeek, boolean checkHolidays) {
-        if (nth < 1) return null;
-        if (dayOfWeek < 0) return null;
-
-        int month = this.month();
-        MutableDateTime dt = MutableDateTime.yearMonthDay(year(), month, 1);
-        dt.rollToDayOfWeek(dayOfWeek);
-        int count = 0;
-        while(count < nth && dt.month() == month) {
-            dt.addDays(7);
-            if (checkHolidays && dt.isHoliday()) dt.addDays(7);
-            count++;
-        }
-        return (dt.month() == month) ? dt : null;
-    }
-
-    /**
-     * Answer the nth last business _dayOfYear counting backward in the month. This
-     * measure frequently appears for contract expiration in Futures and Options.
-     * <p>Examples</p>
-     * <ul>
-     *     <li>last business _dayOfYear of prior month (Bonds)</li>
-     *     <li>2nd last business _dayOfYear of month preceding contract month (Metals)</li>
-     *     <li>5th last business _dayOfYear of month prior to contract month (Cotton)</li>
-     *     <li>7th last business _dayOfYear of month prior to contract month (Coffee)</li>
-     *     <li>10th last business _dayOfYear of month prior to contract month (Cocoa)</li>
-     * </ul>
-     *
-     * @param nth last nth index (0..N counting from last _dayOfYear)
-     * @return MutableDateTime
-     */
-    public DateTime lastNthBusinessDayOfMonth(int nth) {
-        return lastNthBusinessDayOfMonthBefore(nth, null);
-    }
-
-    /**
-     * Answer the nth last business _dayOfYear counting backward in the month.
-     * This
-     * measure frequently appears for contract expiration in Futures and Options.
-     * <p>Examples</p>
-     * <ul>
-     *     <li>XXX (Bonds)</li>
-     * </ul>
-     *
-     * @param nth last nth index (0..N counting from last _dayOfYear)
-     * @return MutableDateTime
-     */
-    public DateTime lastNthBusinessDayOfMonthBefore(int nth, DateTime before) {
-        DateTimeIterator gen = (before != null) ? businessDaysInMonthBefore(before) : businessDaysInMonth();
-        ArrayList<DateTime> days = new ArrayList<>();
-        while(gen.hasNext()) days.add(gen.next());
-        int size = days.size();
-        if (nth >= size) return null;
-        return days.get(size-nth-1);
-    }
-
-
-    /**
-     * This measure appears for last trading _dayOfYear (expiration) for Futures and Options.
-     *
-     * <p>Examples</p>
-     * <ul>
-     *     <li>2nd business _dayOfYear preceding 3rd wednesday of contract month (Currencies)</li>
-     * </ul>
-     * @param nth
-     * @param ith
-     * @param wkday
-     * @return
-     */
-    public DateTime lastNthBusinessDayOfMonthBeforeIthWeekday(int nth, int ith, int wkday) {
-        DateTime dt = nthBusinessWeekdayOfMonth(ith,wkday);
-        if (dt == null) return null;
-        DateTimeIterator gen = this.businessDaysBefore(dt);
-        ArrayList<DateTime> days = new ArrayList<>();
-        while(gen.hasNext()) days.add(gen.next());
-        int size = days.size();
-        if (nth >= size) return null;
-        return days.get(size-nth-1);
-    }
 
 
     // -----------------------------------------------------------

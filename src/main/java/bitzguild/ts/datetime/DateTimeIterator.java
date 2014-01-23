@@ -120,9 +120,9 @@ public class DateTimeIterator implements Iterator<DateTime> {
      *
      * @return DateTimeIncrementer
      */
-    public static DateTimeIncrementer businessDay() { return new DateTimeIncrementer() {
+    public static DateTimeIncrementer businessDays(final DateTimePredicate holidays) { return new DateTimeIncrementer() {
             public void increment(MutableDateTime dt) {
-                dt.nextBusinessDay();
+                dt.nextBusinessDay(holidays);
             }
         };
     }
