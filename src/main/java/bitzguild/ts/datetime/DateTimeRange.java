@@ -32,7 +32,7 @@ package bitzguild.ts.datetime;
 
 
 /**
- * Non-mutable representation of _date _time range, having lower
+ * Non-mutable representation of date time range, having lower
  * and upper bounds. Includes static creation methods and set
  * arithmetic on ranges.
  * 
@@ -104,8 +104,7 @@ public class DateTimeRange {
 		super();
         MutableDateTime dt = MutableDateTime.now();
 		long rep = dt.rep();
-		_lowerBound = rep;
-		_upperBound = rep;
+        _assignRange(rep, rep);
 	}
 	
 	/**
@@ -116,8 +115,7 @@ public class DateTimeRange {
 	 */
 	public DateTimeRange(long lower, long upper) {
 		super();
-		_lowerBound = lower;
-		_upperBound = upper;
+        _assignRange(lower, upper);
 	}
 	
 
@@ -129,9 +127,19 @@ public class DateTimeRange {
 	 */
 	public DateTimeRange(DateTime dtLower, DateTime dtUpper) {
 		super();
-		_lowerBound = dtLower.rep();
-		_upperBound = dtUpper.rep();
+        _assignRange(dtLower.rep(), dtUpper.rep());
 	}
+
+    /**
+     * Ensure range is neutral or increasing order
+      
+     * @param lower long
+     * @param upper long
+     */
+    private void _assignRange(long lower, long upper) {
+        _lowerBound = Math.min(lower,upper);
+        _upperBound = Math.max(lower,upper);
+    }
 
 	public DateTime lower() { return new MutableDateTime(_lowerBound); }
 	public DateTime upper() { return new MutableDateTime(_upperBound); }
