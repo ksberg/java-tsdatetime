@@ -74,13 +74,15 @@ public class CompactDateTimeFormat implements DateTimeFormat {
      */
     public StringBuffer renderToBuffer(DateTime date, StringBuffer strb) {
         strb.append(date.year()*10000 + date.month()*100 + date.day());
-        strb.append(".");
-        int before = strb.length();
-        strb.append(date.hours()*10000000 + date.minutes()*100000 + date.seconds()*1000 + date.millis());
-        int len = strb.length() - before;
-        if (len < 9) {
-        	int balance = 9 - len;
-        	while(balance-- > 0) strb.insert(before, '0');
+        if (date.millisecondsSinceMidnight() > 0) {
+            strb.append(".");
+            int before = strb.length();
+            strb.append(date.hours()*10000000 + date.minutes()*100000 + date.seconds()*1000 + date.millis());
+            int len = strb.length() - before;
+            if (len < 9) {
+                int balance = 9 - len;
+                while(balance-- > 0) strb.insert(before, '0');
+            }
         }
         return strb;
     }
@@ -93,4 +95,9 @@ public class CompactDateTimeFormat implements DateTimeFormat {
         return _daysAndMonths;
     }
 
+    public static void main(String[] args) {
+        MutableDateTime dt = MutableDateTime.now();
+        dt.setMillisSinceMidnight(0);
+        System.out.println(dt);
+    }
 }

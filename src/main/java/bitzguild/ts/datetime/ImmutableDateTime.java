@@ -253,49 +253,6 @@ public class ImmutableDateTime extends AbstractDateTime implements java.io.Seria
 
 
 
-	// ------------------------------------------------------------------------------------
-	// Instance Methods - ~Accessors
-    // ------------------------------------------------------------------------------------
-
-
-
-    /**
-     * Answer the dayOfYear number in year (1 ... 366 max)
-     *
-     * @return int
-     */
-    public int dayOfYear() { return _dayOfYear; }
-
-
-    /**
-	 * Answer the number of days in year including this date
-     *
-	 * @return int days in year
-	 */
-	public int numberOfDaysInYear() {
-		return daysInYear(_year);
-	}
-
-	/**
-	 * Answer number of days left until new year
-     *
-	 * @return int number of days remaining in year
-	 */
-	public int daysLeftOfYear() {
-		return numberOfDaysInYear() - _dayOfYear;
-	}
-
-    /**
-     * Answer week count into current month, starting at 1.
-     *
-     * @return int
-     */
-    public int weekOfMonth() {
-        return weekOfMonth(_dayOfYear, month());
-    }
-
-
-
 	// -----------------------------------------------------------
 	// Immutable Modifiers - returns new modified object
 	// -----------------------------------------------------------
