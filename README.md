@@ -5,7 +5,7 @@ Performant Date replacement for Java with added manipulation and query methods
 
 
 BENCHMARK RESULTS
-
+```
                 Test   BitzGuild        Joda        Java        Factor
 
             Creation          29         219         527        18.092
@@ -18,3 +18,5 @@ BENCHMARK RESULTS
       Iterate by Day          12         111          13         9.146
      Iterate by Year          10         689         621        63.538
   Iterate by Biz Day          97         137         461         4.750
+
+```
